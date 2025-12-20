@@ -21,6 +21,7 @@ Thumbs.db
 package-lock.json
 logo.png
 README.md
-firebase-config.js
 
-public/
+
+public/firebase-config.js
+
