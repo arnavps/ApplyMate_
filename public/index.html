@@ -10,10 +10,10 @@
     <link rel="shortcut icon" type="image/png" href="/logo.png">
     <link rel="apple-touch-icon" href="/logo.png">
     
-    <!-- Google Fonts - Inter -->
+    <!-- Google Fonts - IBM Plex Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -27,9 +27,9 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#0073b1', // LinkedIn Blue
-                        secondary: '#004182',
-                        accent: '#0073b1',
+                        primary: '#1e3a8a',
+                        secondary: '#172554',
+                        accent: '#0ea5b7',
                     },
                     fontFamily: {
                         sans: ['Inter', 'system-ui', 'sans-serif'],
@@ -41,7 +41,7 @@
     
     <style>
         * {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
         }
         
         /* Custom Animations */
@@ -117,7 +117,7 @@
         }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="bg-[#f7f9fc] min-h-screen overflow-x-hidden">
     
     <!-- Header / Top Bar -->
     <header class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
@@ -163,9 +163,9 @@
         </div>
     </header>
 
-    <div class="flex h-[calc(100vh-4rem)]">
+    <div class="flex md:grid md:grid-cols-[14rem_1fr] lg:grid-cols-[15rem_1fr] xl:grid-cols-[16rem_1fr] h-[calc(100vh-4rem)]">
         <!-- Sidebar -->
-        <aside id="sidebar" class="sidebar fixed lg:static inset-y-0 left-0 w-64 bg-white border-r border-gray-200 z-40 lg:translate-x-0">
+        <aside id="sidebar" class="sidebar fixed md:static inset-y-0 left-0 w-64 bg-white border-r border-gray-100 z-40 transform -translate-x-full md:translate-x-0">
             <div class="h-full flex flex-col">
                 <div class="p-4 border-b border-gray-200">
                     <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Workflow</h2>
@@ -207,9 +207,38 @@
             
             <!-- Home Page (Workflow) -->
             <div id="page-home" class="page active">
-                <div class="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
+                <div class="max-w-6xl mx-auto w-full p-4 sm:p-6 lg:p-8">
+                    <section id="landingHero" class="relative overflow-hidden rounded-xl bg-white border border-gray-200 shadow-sm mb-6">
+                        <div class="grid md:grid-cols-2 gap-6 md:gap-8 p-6 md:py-8">
+                            <div class="space-y-3 max-w-xl mx-auto md:mx-0">
+                                <h1 class="text-3xl md:text-4xl font-bold text-gray-900 leading-tight md:leading-snug">AI-powered resume-to-job matching for professionals</h1>
+                                <p class="text-gray-600 text-base md:text-lg leading-relaxed max-w-prose">Upload your resume, paste a job description, and get a tailored match score, skills insight, and a ready-to-send cover letter.</p>
+                                <div class="flex flex-col md:flex-row items-stretch md:items-center gap-2 pt-2">
+                                    <button onclick="startAnalysis()" class="w-full md:w-auto px-5 py-2.5 bg-primary text-white font-semibold rounded-lg hover:bg-secondary transition-smooth shadow-sm">Start Analysis</button>
+                                    <button onclick="navigateTo('help')" class="w-full md:w-auto px-5 py-2.5 bg-gray-100 text-gray-800 font-semibold rounded-lg hover:bg-gray-200 transition-smooth">Learn More</button>
+                                </div>
+                            </div>
+                            <div class="hidden md:flex items-center justify-center">
+                                <div class="w-full max-w-sm">
+                                    <div class="rounded-xl border border-gray-200 bg-gray-50 p-5">
+                                        <div class="h-3 w-3/4 rounded-full bg-gray-200 mb-4"></div>
+                                        <div class="space-y-3">
+                                            <div class="h-2 w-full rounded bg-gray-200"></div>
+                                            <div class="h-2 w-5/6 rounded bg-gray-200"></div>
+                                            <div class="h-2 w-2/3 rounded bg-gray-200"></div>
+                                            <div class="h-2 w-4/5 rounded bg-gray-200"></div>
+                                        </div>
+                                        <div class="mt-6 grid grid-cols-2 gap-3">
+                                            <div class="h-16 rounded-lg bg-white border border-gray-200 shadow-sm"></div>
+                                            <div class="h-16 rounded-lg bg-white border border-gray-200 shadow-sm"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                     <!-- Pro Tip Bar -->
-                    <div id="proTip" class="mb-6 bg-blue-50 border-l-4 border-primary rounded-lg p-4 animate-fade-in hidden">
+                    <div id="proTip" class="mb-8 bg-blue-50 border-l-4 border-primary rounded-lg p-4 animate-fade-in hidden">
                         <div class="flex items-start">
                             <svg class="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -226,10 +255,9 @@
                         </div>
                     </div>
 
-                    <!-- Step Content Container -->
-                    <div id="workflowContent">
+                    <div id="workflowContent" class="hidden space-y-6 md:space-y-8">
                         <!-- Step 1: Upload Resume -->
-                        <div id="step1" class="step-content bg-white rounded-lg shadow-sm border border-gray-200 p-6 sm:p-8 animate-fade-in">
+                        <div id="step1" class="step-content bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 lg:p-6 animate-fade-in">
                             <div class="mb-6">
                                 <h2 class="text-2xl font-bold text-gray-900 mb-2">Upload Your Resume</h2>
                                 <p class="text-gray-600">Upload your resume in PDF format to get started with the analysis.</p>
@@ -252,8 +280,8 @@
                                 </div>
                             </div>
                             
-                            <div class="flex justify-end">
-                                <button onclick="goToStep(2)" id="step1Next" disabled class="px-6 py-2.5 bg-primary text-white font-medium rounded-lg hover:bg-secondary transition-smooth disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2">
+                            <div class="flex md:justify-end">
+                                <button onclick="goToStep(2)" id="step1Next" disabled class="w-full md:w-auto px-6 py-2.5 bg-primary text-white font-medium rounded-lg hover:bg-secondary transition-smooth disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2">
                                     <span>Next: Job Description</span>
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -263,7 +291,7 @@
                         </div>
 
                         <!-- Step 2: Job Description -->
-                        <div id="step2" class="step-content hidden bg-white rounded-lg shadow-sm border border-gray-200 p-6 sm:p-8">
+                        <div id="step2" class="step-content hidden bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 lg:p-6">
                             <div class="mb-6">
                                 <h2 class="text-2xl font-bold text-gray-900 mb-2">Paste Job Description</h2>
                                 <p class="text-gray-600">Paste the complete job description to analyze how well your resume matches.</p>
@@ -275,14 +303,14 @@
                                 <p class="mt-2 text-xs text-gray-500">The more detailed the job description, the better the analysis results.</p>
                             </div>
                             
-                            <div class="flex justify-between">
-                                <button onclick="goToStep(1)" class="px-6 py-2.5 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-smooth flex items-center space-x-2">
+                            <div class="flex flex-col md:flex-row items-stretch justify-between gap-3">
+                                <button onclick="goToStep(1)" class="w-full md:w-auto px-6 py-2.5 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-smooth flex items-center space-x-2">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                                     </svg>
                                     <span>Back</span>
                                 </button>
-                                <button onclick="goToStep(3)" id="step2Next" disabled class="px-6 py-2.5 bg-primary text-white font-medium rounded-lg hover:bg-secondary transition-smooth disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2">
+                                <button onclick="goToStep(3)" id="step2Next" disabled class="w-full md:w-auto px-6 py-2.5 bg-primary text-white font-medium rounded-lg hover:bg-secondary transition-smooth disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2">
                                     <span>Next: Generate Results</span>
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -292,13 +320,13 @@
                         </div>
 
                         <!-- Step 3: Generate Results -->
-                        <div id="step3" class="step-content hidden bg-white rounded-lg shadow-sm border border-gray-200 p-6 sm:p-8">
+                        <div id="step3" class="step-content hidden bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 lg:p-6">
                             <div class="mb-6">
                                 <h2 class="text-2xl font-bold text-gray-900 mb-2">Generate Results</h2>
                                 <p class="text-gray-600">Ready to analyze your resume? Click the button below to generate your personalized insights.</p>
                             </div>
                             
-                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-5 mb-6">
                                 <h3 class="text-lg font-semibold text-gray-900 mb-3">What You'll Get:</h3>
                                 <ul class="space-y-2 text-gray-700">
                                     <li class="flex items-start"><svg class="w-5 h-5 text-primary mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Match score analysis with detailed explanation</span></li>
@@ -309,14 +337,14 @@
                                 </ul>
                             </div>
                             
-                            <div class="flex justify-between">
-                                <button onclick="goToStep(2)" class="px-6 py-2.5 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-smooth flex items-center space-x-2">
+                            <div class="flex flex-col md:flex-row items-stretch justify-between gap-3">
+                                <button onclick="goToStep(2)" class="w-full md:w-auto px-6 py-2.5 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-smooth flex items-center space-x-2">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                                     </svg>
                                     <span>Back</span>
                                 </button>
-                                <button onclick="generateResults()" id="generateBtn" class="px-8 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-secondary transition-smooth shadow-md hover:shadow-lg transform hover:scale-105 flex items-center space-x-2">
+                                <button onclick="generateResults()" id="generateBtn" class="w-full md:w-auto px-8 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-secondary transition-smooth shadow-md hover:shadow-lg transform hover:scale-105 flex items-center space-x-2">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                                     </svg>
@@ -349,22 +377,22 @@
 
                         <!-- Step 4: Results -->
                         <div id="step4" class="step-content hidden space-y-6">
-                            <div class="flex items-center justify-between mb-6">
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6">
                                 <div>
                                     <h2 class="text-2xl font-bold text-gray-900">Your Results</h2>
                                     <p class="text-gray-600 mt-1">Comprehensive analysis of your resume match</p>
                                 </div>
-                                <button onclick="resetApplication()" class="px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-smooth text-sm">Start Over</button>
+                                <button onclick="resetApplication()" class="w-full md:w-auto px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-smooth text-sm">Start Over</button>
                             </div>
 
                             <!-- Match Score Card -->
-                            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sm:p-8">
+                            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 lg:p-8">
                                 <div class="text-center mb-6">
                                     <h3 class="text-lg font-semibold text-gray-700 mb-2 uppercase tracking-wide">Match Score</h3>
                                     <div class="text-6xl font-bold mb-4" id="scoreValue">0</div>
                                 </div>
                                 <div class="w-full bg-gray-200 rounded-full h-8 mb-4 overflow-hidden">
-                                    <div id="progressBar" class="progress-bar h-8 rounded-full flex items-center justify-end pr-3" style="width: 0%;">
+                                    <div id="progressBar" class="progress-bar h-8 rounded-full flex items-center justify-end pr-3">
                                         <span id="progressText" class="text-white text-sm font-semibold">0%</span>
                                     </div>
                                 </div>
@@ -372,7 +400,7 @@
                             </div>
 
                             <!-- Skills Section -->
-                            <div class="grid md:grid-cols-2 gap-6">
+                            <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                                     <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
                                         <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -394,7 +422,7 @@
                             </div>
 
                             <!-- Resume Improvements -->
-                            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 lg:p-8">
                                 <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
                                     <svg class="w-5 h-5 text-yellow-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
@@ -462,7 +490,7 @@
 
             <!-- My Applications Page -->
             <div id="page-applications" class="page">
-                <div class="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
+                <div class="max-w-7xl mx-auto w-full p-4 sm:p-6 lg:p-8">
                     <div class="mb-6">
                         <h1 class="text-3xl font-bold text-gray-900 mb-2">My Applications</h1>
                         <p class="text-gray-600">View your past resume analyses and results</p>
@@ -478,13 +506,13 @@
 
             <!-- Dashboard Page -->
             <div id="page-dashboard" class="page">
-                <div class="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
+                <div class="max-w-7xl mx-auto w-full p-4 sm:p-6 lg:p-8">
                     <div class="mb-6">
                         <h1 class="text-3xl font-bold text-gray-900 mb-2">Dashboard</h1>
                         <p class="text-gray-600">Your application statistics and insights</p>
                     </div>
                     
-                    <div id="dashboardContent" class="grid md:grid-cols-3 gap-6">
+                    <div id="dashboardContent" class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
                         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                             <h3 class="text-sm font-medium text-gray-500 uppercase mb-2">Total Analyses</h3>
                             <p class="text-3xl font-bold text-primary" id="totalAnalyses">-</p>
@@ -640,6 +668,13 @@
                 link.classList.add('text-gray-700');
             });
             
+            if (page === 'home') {
+                const hero = document.getElementById('landingHero');
+                const workflow = document.getElementById('workflowContent');
+                if (hero) hero.classList.remove('hidden');
+                if (workflow) workflow.classList.add('hidden');
+            }
+            
             // Load page-specific content
             if (page === 'applications' && currentUser) {
                 loadApplications();
@@ -648,8 +683,11 @@
             }
             
             // Close sidebar on mobile
-            if (window.innerWidth < 1024) {
-                toggleSidebar();
+            if (window.innerWidth < 768) {
+                const sidebar = document.getElementById('sidebar');
+                const overlay = document.getElementById('sidebarOverlay');
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
             }
         }
 
@@ -744,12 +782,28 @@
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
-            sidebar.classList.toggle('sidebar-hidden');
-            overlay.classList.toggle('hidden');
+            if (window.innerWidth < 768) {
+                sidebar.classList.toggle('-translate-x-full');
+                overlay.classList.toggle('hidden');
+            } else {
+                // Ensure desktop/tablet layout shows sidebar without overlay
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
         }
         document.getElementById('sidebarToggle').addEventListener('click', toggleSidebar);
 
         // Workflow Functions
+        function startAnalysis() {
+            const hero = document.getElementById('landingHero');
+            const workflow = document.getElementById('workflowContent');
+            if (hero) hero.classList.add('hidden');
+            if (workflow) workflow.classList.remove('hidden');
+            goToStep(1);
+            setTimeout(() => {
+                document.getElementById('step1').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
         function goToStep(step) {
             document.querySelectorAll('.step-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(`step${step}`).classList.remove('hidden');
