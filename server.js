@@ -238,7 +238,9 @@ app.get('/api/analyses', async (req, res, next) => {
         } catch (queryError) {
           console.error('Error querying user analyses:', queryError);
           // If query fails, return empty array instead of error (user might not have any analyses yet)
-          if (queryError.message.includes('index') || queryError.message.includes('requires')) {
+          const msgUpper = (queryError.message || '').toUpperCase();
+          const codeStr = String(queryError.code || '');
+          if (msgUpper.includes('INDEX') || msgUpper.includes('REQUIRES') || msgUpper.includes('NOT_FOUND') || codeStr === '5') {
             // Index not created yet - return empty for now
             analyses = [];
           } else {

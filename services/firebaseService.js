@@ -180,6 +180,10 @@ class FirebaseService {
     }
 
     try {
+      // Defensive guard: treat missing/invalid userId as empty results
+      if (!userId || typeof userId !== 'string' || userId.trim() === '') {
+        return [];
+      }
       // Try querying with orderBy first (requires composite index)
       // If that fails, fall back to querying without orderBy and sorting in memory
       let snapshot;
@@ -258,6 +262,12 @@ class FirebaseService {
       console.error('❌ Error fetching user analyses:', error.message);
       console.error('Error code:', error.code);
       console.error('Error stack:', error.stack);
+      // Treat NOT_FOUND (code 5) and similar "not found" cases as empty results to avoid user-facing errors
+      const codeStr = String(error && error.code !== undefined ? error.code : '');
+      const msgUpper = (error && error.message ? error.message : '').toUpperCase();
+      if (codeStr === '5' || msgUpper.includes('NOT_FOUND')) {
+        return [];
+      }
       throw new Error(`Failed to fetch analyses: ${error.message}`);
     }
   }
@@ -272,4 +282,3 @@ class FirebaseService {
 }
 
 module.exports = new FirebaseService();
-
