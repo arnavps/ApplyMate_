@@ -29,20 +29,30 @@ class FirebaseService {
     try {
       const serviceAccountPath = path.join(__dirname, '..', 'firebase-service-account.json');
 
-      if (!fs.existsSync(serviceAccountPath)) {
-        console.warn('⚠️  Firebase service account file not found. Results will not be saved to database.');
-        console.warn('   To enable Firebase: Download service account JSON from Firebase Console');
-        console.warn('   and save it as firebase-service-account.json in the project root.');
+      if (fs.existsSync(serviceAccountPath)) {
+        const serviceAccount = require(serviceAccountPath);
+        if (admin.apps.length === 0) {
+          admin.initializeApp({
+            credential: admin.credential.cert(serviceAccount)
+          });
+        }
+      } else if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+        // Fallback: Read from Environment Variable (for deployment)
+        try {
+          const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+          if (admin.apps.length === 0) {
+            admin.initializeApp({
+              credential: admin.credential.cert(serviceAccount)
+            });
+          }
+          console.log('✅ Firebase initialized from Environment Variable');
+        } catch (parseError) {
+          console.error('❌ Failed to parse FIREBASE_SERVICE_ACCOUNT environment variable');
+          throw parseError;
+        }
+      } else {
+        console.warn('⚠️  Firebase service account file not found via path or env var.');
         return;
-      }
-
-      const serviceAccount = require(serviceAccountPath);
-
-      // Check if Firebase is already initialized
-      if (admin.apps.length === 0) {
-        admin.initializeApp({
-          credential: admin.credential.cert(serviceAccount)
-        });
       }
 
       this.db = admin.firestore();
