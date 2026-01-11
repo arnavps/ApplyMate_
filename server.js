@@ -219,7 +219,12 @@ app.post('/api/save-analysis', async (req, res, next) => {
   try {
     const { analysis, jobDescription } = req.body;
 
-    // 1. Verify Auth
+    // 1. Check Server Status
+    if (!firebaseService.isAvailable()) {
+      return res.status(503).json({ error: 'Server misconfigured: Backend Firebase connection failed. Check server logs.' });
+    }
+
+    // 2. Verify Auth
     if (!req.headers.authorization) {
       return res.status(401).json({ error: 'Authentication required to save results' });
     }
