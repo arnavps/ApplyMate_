@@ -69,12 +69,23 @@ class FirebaseService {
 
       this.db = admin.firestore();
       this.initialized = true;
+      this.initError = null;
       console.log('✅ Firebase initialized successfully');
     } catch (error) {
       console.error('❌ Firebase initialization error:', error.message);
-      console.warn('   Continuing without Firebase. Results will not be saved.');
+
       this.initialized = false;
+      this.initError = error.message;
+
+      if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+        // Add hint if using env var
+        this.initError += ` (Parsing ENV: ${process.env.FIREBASE_SERVICE_ACCOUNT.substring(0, 10)}...)`;
+      }
     }
+  }
+
+  getInitError() {
+    return this.initError;
   }
 
   /**

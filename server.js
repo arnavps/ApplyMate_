@@ -221,7 +221,11 @@ app.post('/api/save-analysis', async (req, res, next) => {
 
     // 1. Check Server Status
     if (!firebaseService.isAvailable()) {
-      return res.status(503).json({ error: 'Server misconfigured: Backend Firebase connection failed. Check server logs.' });
+      const initError = firebaseService.getInitError() || 'Unknown initialization error';
+      return res.status(503).json({
+        error: `Server Config Error: ${initError}`,
+        details: 'Check FIREBASE_SERVICE_ACCOUNT format.'
+      });
     }
 
     // 2. Verify Auth
