@@ -1,1596 +1,1141 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ApplyMate</title>
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/logo.png" />
-    <link rel="shortcut icon" type="image/png" href="/logo.png" />
-    <link rel="apple-touch-icon" href="/logo.png" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ApplyMate</title>
 
-    <!-- Google Fonts - Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/logo.png" />
+  <link rel="shortcut icon" type="image/png" href="/logo.png" />
+  <link rel="apple-touch-icon" href="/logo.png" />
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <!-- Google Fonts - Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              app: "#0b1220",
-              card: "#0f172a",
-              primary: "#22d3ee",
-              accent: "#22d3ee",
-              textPrimary: "#e5e7eb",
-              textSecondary: "#9ca3af",
-            },
-            fontFamily: {
-              sans: ["Inter", "system-ui", "sans-serif"],
-            },
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            app: "#0b1220",
+            card: "#0f172a",
+            primary: "#22d3ee",
+            accent: "#22d3ee",
+            textPrimary: "#e5e7eb",
+            textSecondary: "#9ca3af",
+          },
+          fontFamily: {
+            sans: ["Inter", "system-ui", "sans-serif"],
           },
         },
-      };
-    </script>
+      },
+    };
+  </script>
 
-    <style>
-      * {
-        font-family: "Inter", system-ui, -apple-system, sans-serif;
-      }
+  <style>
+    * {
+      font-family: "Inter", system-ui, -apple-system, sans-serif;
+    }
 
-      /* Custom Animations */
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(10px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      @keyframes slideIn {
-        from {
-          opacity: 0;
-          transform: translateX(-20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateX(0);
-        }
-      }
-      @keyframes progressBar {
-        from {
-          width: 0%;
-        }
+    /* Custom Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
       }
 
-      .animate-fade-in {
-        animation: fadeIn 0.4s ease-out;
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
-      .animate-slide-in {
-        animation: slideIn 0.3s ease-out;
-      }
-      .progress-bar {
-        animation: progressBar 1.5s ease-out forwards;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
       }
 
-      /* Collapsible Animation */
-      .collapsible-content {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.3s ease-out;
+      to {
+        opacity: 1;
+        transform: translateX(0);
       }
-      .collapsible-content.expanded {
-        max-height: 5000px;
-        transition: max-height 0.5s ease-in;
-      }
+    }
 
-      /* Sidebar Animation */
-      .sidebar {
-        transition: transform 0.3s ease-in-out;
+    @keyframes progressBar {
+      from {
+        width: 0%;
       }
-      .sidebar-hidden {
-        transform: translateX(-100%);
-      }
+    }
 
-      /* Smooth Transitions */
-      .transition-smooth {
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      }
+    .animate-fade-in {
+      animation: fadeIn 0.4s ease-out;
+    }
 
-      /* Custom Scrollbar */
-      ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #c1c1c1;
-        border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #a8a8a8;
-      }
+    .animate-slide-in {
+      animation: slideIn 0.3s ease-out;
+    }
 
-      /* Page transitions */
-      .page {
-        display: none;
-      }
-      .page.active {
-        display: block;
-        animation: fadeIn 0.3s ease-out;
-      }
-    </style>
-    <style>
-      body { background-color: #0b1220; }
-      .nav-link { color: #9ca3af; }
-      .bg-blue-50 { background-color: rgba(56, 189, 248, 0.12); }
-      .bg-gray-50 { background-color: rgba(255, 255, 255, 0.04); }
-      #matchingSkills span { background-color: rgba(16,185,129,0.12); color: #86efac; border: 1px solid rgba(16,185,129,0.25); border-radius: 9999px; padding: 6px 12px; font-weight: 600; }
-      #missingSkills span { background-color: rgba(239,68,68,0.12); color: #fca5a5; border: 1px solid rgba(239,68,68,0.25); border-radius: 9999px; padding: 6px 12px; font-weight: 600; }
-    </style>
-  </head>
-  <body class="bg-app min-h-screen overflow-x-hidden">
-    <!-- Header / Top Bar -->
-    <header
-      class="bg-app/80 border-b border-white/10 sticky top-0 z-50 backdrop-blur"
-    >
-      <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16">
-          <!-- Left: Logo + App Name -->
-          <div class="flex items-center space-x-3">
-            <button
-              id="sidebarToggle"
-              class="lg:hidden p-2 rounded-md text-gray-300 hover:bg-white/10"
-            >
-              <svg
-                class="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 6h16M4 12h16M4 18h16"
-                ></path>
-              </svg>
+    .progress-bar {
+      animation: progressBar 1.5s ease-out forwards;
+    }
+
+    /* Collapsible Animation */
+    .collapsible-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+
+    .collapsible-content.expanded {
+      max-height: 5000px;
+      transition: max-height 0.5s ease-in;
+    }
+
+    /* Sidebar Animation */
+    .sidebar {
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .sidebar-hidden {
+      transform: translateX(-100%);
+    }
+
+    /* Smooth Transitions */
+    .transition-smooth {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #a8a8a8;
+    }
+
+    /* Page transitions */
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+      animation: fadeIn 0.3s ease-out;
+    }
+  </style>
+  <style>
+    body {
+      background-color: #0b1220;
+    }
+
+    .nav-link {
+      color: #9ca3af;
+    }
+
+    .bg-blue-50 {
+      background-color: rgba(56, 189, 248, 0.12);
+    }
+
+    .bg-gray-50 {
+      background-color: rgba(255, 255, 255, 0.04);
+    }
+
+    #matchingSkills span {
+      background-color: rgba(16, 185, 129, 0.12);
+      color: #86efac;
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 9999px;
+      padding: 6px 12px;
+      font-weight: 600;
+    }
+
+    #missingSkills span {
+      background-color: rgba(239, 68, 68, 0.12);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      border-radius: 9999px;
+      padding: 6px 12px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body class="bg-app min-h-screen overflow-x-hidden">
+  <!-- Header / Top Bar -->
+  <header class="bg-app/80 border-b border-white/10 sticky top-0 z-50 backdrop-blur">
+    <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Left: Logo + App Name -->
+        <div class="flex items-center space-x-3">
+          <button id="sidebarToggle" class="lg:hidden p-2 rounded-md text-gray-300 hover:bg-white/10">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+          <a href="#" onclick="navigateTo('home'); return false;" class="flex items-center space-x-2">
+            <img src="/logo.png" alt="ApplyMate" class="w-8 h-8 object-contain" />
+            <span class="text-xl font-bold text-textPrimary">ApplyMate</span>
+          </a>
+        </div>
+
+        <!-- Center: Navigation (Desktop) -->
+        <nav class="hidden md:flex items-center space-x-1">
+          <a href="#" onclick="navigateTo('home'); return false;"
+            class="nav-link px-4 py-2 text-sm font-medium text-primary bg-blue-50 rounded-md">Home</a>
+          <a href="#" onclick="navigateTo('applications'); return false;"
+            class="nav-link px-4 py-2 text-sm font-medium text-gray-300 hover:text-textPrimary hover:bg-white/10 rounded-md transition-smooth"
+            id="navApplications">My Applications</a>
+          <a href="#" onclick="navigateTo('dashboard'); return false;"
+            class="nav-link px-4 py-2 text-sm font-medium text-gray-300 hover:text-textPrimary hover:bg-white/10 rounded-md transition-smooth"
+            id="navDashboard">Dashboard</a>
+          <a href="#" onclick="navigateTo('help'); return false;"
+            class="nav-link px-4 py-2 text-sm font-medium text-gray-300 hover:text-textPrimary hover:bg-white/10 rounded-md transition-smooth">Help</a>
+        </nav>
+
+        <!-- Right: Auth Section -->
+        <div class="flex items-center space-x-4">
+          <div id="authNotSignedIn" class="flex items-center space-x-2">
+            <button onclick="showLoginModal()"
+              class="px-4 py-2 text-sm font-medium text-primary border border-primary rounded-md hover:bg-white/10 transition-smooth">
+              Login
             </button>
-            <a
-              href="#"
-              onclick="navigateTo('home'); return false;"
-              class="flex items-center space-x-2"
-            >
-              <img
-                src="/logo.png"
-                alt="ApplyMate"
-                class="w-8 h-8 object-contain"
-              />
-              <span class="text-xl font-bold text-textPrimary">ApplyMate</span>
-            </a>
           </div>
-
-          <!-- Center: Navigation (Desktop) -->
-          <nav class="hidden md:flex items-center space-x-1">
-            <a
-              href="#"
-              onclick="navigateTo('home'); return false;"
-              class="nav-link px-4 py-2 text-sm font-medium text-primary bg-blue-50 rounded-md"
-              >Home</a
-            >
-            <a
-              href="#"
-              onclick="navigateTo('applications'); return false;"
-              class="nav-link px-4 py-2 text-sm font-medium text-gray-300 hover:text-textPrimary hover:bg-white/10 rounded-md transition-smooth"
-              id="navApplications"
-              >My Applications</a
-            >
-            <a
-              href="#"
-              onclick="navigateTo('dashboard'); return false;"
-              class="nav-link px-4 py-2 text-sm font-medium text-gray-300 hover:text-textPrimary hover:bg-white/10 rounded-md transition-smooth"
-              id="navDashboard"
-              >Dashboard</a
-            >
-            <a
-              href="#"
-              onclick="navigateTo('help'); return false;"
-              class="nav-link px-4 py-2 text-sm font-medium text-gray-300 hover:text-textPrimary hover:bg-white/10 rounded-md transition-smooth"
-              >Help</a
-            >
-          </nav>
-
-          <!-- Right: Auth Section -->
-          <div class="flex items-center space-x-4">
-            <div id="authNotSignedIn" class="flex items-center space-x-2">
-              <button
-                onclick="showLoginModal()"
-                class="px-4 py-2 text-sm font-medium text-primary border border-primary rounded-md hover:bg-white/10 transition-smooth"
-              >
-                Login
-              </button>
+          <div id="authSignedIn" class="hidden flex items-center space-x-3">
+            <span id="userEmail" class="text-sm text-gray-300 hidden sm:inline"></span>
+            <div
+              class="w-10 h-10 bg-primary rounded-full flex items-center justify-center cursor-pointer hover:opacity-90 transition-smooth"
+              onclick="toggleUserMenu()">
+              <span class="text-white font-semibold text-sm" id="userInitial">U</span>
             </div>
-            <div id="authSignedIn" class="hidden flex items-center space-x-3">
-              <span
-                id="userEmail"
-                class="text-sm text-gray-300 hidden sm:inline"
-              ></span>
-              <div
-                class="w-10 h-10 bg-primary rounded-full flex items-center justify-center cursor-pointer hover:opacity-90 transition-smooth"
-                onclick="toggleUserMenu()"
-              >
-                <span class="text-white font-semibold text-sm" id="userInitial"
-                  >U</span
-                >
-              </div>
-              <div
-                id="userMenu"
-                class="hidden absolute right-4 mt-12 w-48 bg-card rounded-lg shadow-lg border border-white/10 py-1 z-50"
-              >
-                <button
-                  onclick="handleLogout()"
-                  class="w-full text-left px-4 py-2 text-sm text-textSecondary hover:bg-white/5"
-                >
-                  Logout
-                </button>
-              </div>
+            <div id="userMenu"
+              class="hidden absolute right-4 mt-12 w-48 bg-card rounded-lg shadow-lg border border-white/10 py-1 z-50">
+              <button onclick="handleLogout()"
+                class="w-full text-left px-4 py-2 text-sm text-textSecondary hover:bg-white/5">
+                Logout
+              </button>
             </div>
           </div>
         </div>
       </div>
-    </header>
+    </div>
+  </header>
 
-    <div
-      class="flex md:grid md:grid-cols-[14rem_1fr] lg:grid-cols-[15rem_1fr] xl:grid-cols-[16rem_1fr] h-[calc(100vh-4rem)]"
-    >
-      <!-- Sidebar -->
-      <aside
-        id="sidebar"
-        class="sidebar fixed md:static inset-y-0 left-0 w-64 bg-card border-r border-white/10 z-40 transform -translate-x-full md:translate-x-0"
-      >
-        <div class="h-full flex flex-col">
-          <div class="p-4 border-b border-gray-200">
-            <h2
-              class="text-sm font-semibold text-gray-400 uppercase tracking-wider"
-            >
-              Workflow
-            </h2>
-          </div>
-          <nav class="flex-1 overflow-y-auto p-4 space-y-1">
-            <button
-              onclick="navigateTo('home'); goToStep(1);"
-              class="nav-item w-full flex items-center space-x-3 px-3.5 py-2.5 text-sm font-medium text-primary bg-white/10 rounded-lg transition-smooth"
-            >
-              <svg
-                class="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                ></path>
-              </svg>
-              <span>Upload Resume</span>
-            </button>
-            <button
-              onclick="navigateTo('home'); goToStep(2);"
-              class="nav-item w-full flex items-center space-x-3 px-3.5 py-2.5 text-sm font-medium text-gray-300 hover:text-primary hover:bg-white/5 rounded-lg transition-smooth"
-            >
-              <svg
-                class="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                ></path>
-              </svg>
-              <span>Job Description</span>
-            </button>
-            <button
-              onclick="navigateTo('home'); goToStep(3);"
-              class="nav-item w-full flex items-center space-x-3 px-3.5 py-2.5 text-sm font-medium text-gray-300 hover:text-primary hover:bg-white/5 rounded-lg transition-smooth"
-            >
-              <svg
-                class="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M13 10V3L4 14h7v7l9-11h-7z"
-                ></path>
-              </svg>
-              <span>Generate Results</span>
-            </button>
-            <button
-              onclick="navigateTo('applications')"
-              class="nav-item w-full flex items-center space-x-3 px-3.5 py-2.5 text-sm font-medium text-gray-300 hover:text-primary hover:bg-white/5 rounded-lg transition-smooth"
-            >
-              <svg
-                class="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                ></path>
-              </svg>
-              <span>My Applications</span>
-            </button>
-          </nav>
+  <div
+    class="flex md:grid md:grid-cols-[14rem_1fr] lg:grid-cols-[15rem_1fr] xl:grid-cols-[16rem_1fr] h-[calc(100vh-4rem)]">
+    <!-- Sidebar -->
+    <aside id="sidebar"
+      class="sidebar fixed md:static inset-y-0 left-0 w-64 bg-card border-r border-white/10 z-40 transform -translate-x-full md:translate-x-0">
+      <div class="h-full flex flex-col">
+        <div class="p-4 border-b border-gray-200">
+          <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-wider">
+            Workflow
+          </h2>
         </div>
-      </aside>
+        <nav class="flex-1 overflow-y-auto p-4 space-y-1">
+          <button onclick="navigateTo('home'); goToStep(1);"
+            class="nav-item w-full flex items-center space-x-3 px-3.5 py-2.5 text-sm font-medium text-primary bg-white/10 rounded-lg transition-smooth">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+            </svg>
+            <span>Upload Resume</span>
+          </button>
+          <button onclick="navigateTo('home'); goToStep(2);"
+            class="nav-item w-full flex items-center space-x-3 px-3.5 py-2.5 text-sm font-medium text-gray-300 hover:text-primary hover:bg-white/5 rounded-lg transition-smooth">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+              </path>
+            </svg>
+            <span>Job Description</span>
+          </button>
+          <button onclick="navigateTo('home'); goToStep(3);"
+            class="nav-item w-full flex items-center space-x-3 px-3.5 py-2.5 text-sm font-medium text-gray-300 hover:text-primary hover:bg-white/5 rounded-lg transition-smooth">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z">
+              </path>
+            </svg>
+            <span>Generate Results</span>
+          </button>
+          <button onclick="navigateTo('applications')"
+            class="nav-item w-full flex items-center space-x-3 px-3.5 py-2.5 text-sm font-medium text-gray-300 hover:text-primary hover:bg-white/5 rounded-lg transition-smooth">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+              </path>
+            </svg>
+            <span>My Applications</span>
+          </button>
+        </nav>
+      </div>
+    </aside>
 
-      <!-- Sidebar Overlay (Mobile) -->
-      <div
-        id="sidebarOverlay"
-        class="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden hidden"
-        onclick="toggleSidebar()"
-      ></div>
+    <!-- Sidebar Overlay (Mobile) -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden hidden"
+      onclick="toggleSidebar()"></div>
 
-      <!-- Main Content Area -->
-      <main class="flex-1 overflow-y-auto bg-app">
-        <!-- Home Page (Workflow) -->
-        <div id="page-home" class="page active">
-          <div class="max-w-[1200px] mx-auto w-full p-4 sm:p-6 lg:p-8">
-            <section
-              id="landingHero"
-              class="relative overflow-hidden rounded-xl mb-6 bg-gradient-to-br from-[#0b0f14] via-[#0f172a] to-[#0b1320] ring-1 ring-white/10"
-            >
-              <div
-                class="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-gradient-to-tr from-teal-500/20 to-blue-500/10 blur-3xl"
-              ></div>
-              <div
-                class="grid md:grid-cols-2 gap-6 md:gap-8 p-5 md:py-6 lg:p-8"
-              >
-                <div class="space-y-3 max-w-xl mx-auto md:mx-0">
-                  <h1
-                    class="font-bold text-white leading-tight md:leading-snug text-[clamp(1.75rem,3.8vw,3.2rem)]"
-                  >
-                    AI-powered resume-to-job matching for professionals
-                  </h1>
-                  <p
-                    class="text-gray-300 text-base md:text-lg leading-relaxed max-w-prose"
-                  >
-                    Upload your resume, paste a job description, and get a
-                    tailored match score, skills insight, and a ready-to-send
-                    cover letter.
-                  </p>
-                  <div
-                    class="flex flex-col md:flex-row items-stretch md:items-center gap-2 pt-2"
-                  >
-                    <button
-                      onclick="startAnalysis()"
-                      class="w-full md:w-auto px-5 py-2.5 bg-gradient-to-r from-[#22d3ee] to-[#38bdf8] text-gray-900 font-semibold rounded-lg hover:opacity-90 focus-visible:ring-2 focus-visible:ring-[#22d3ee]/50 transition-smooth shadow-sm"
-                    >
-                      Start Analysis
-                    </button>
-                    <button
-                      onclick="navigateTo('help')"
-                      class="w-full md:w-auto px-5 py-2.5 bg-white/10 text-gray-200 font-semibold rounded-lg border border-white/20 hover:bg-white/15 focus-visible:ring-2 focus-visible:ring-white/30 transition-smooth"
-                    >
-                      Learn More
-                    </button>
-                  </div>
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto bg-app">
+      <!-- Home Page (Workflow) -->
+      <div id="page-home" class="page active">
+        <div class="max-w-[1200px] mx-auto w-full p-4 sm:p-6 lg:p-8">
+          <section id="landingHero"
+            class="relative overflow-hidden rounded-xl mb-6 bg-gradient-to-br from-[#0b0f14] via-[#0f172a] to-[#0b1320] ring-1 ring-white/10">
+            <div
+              class="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-gradient-to-tr from-teal-500/20 to-blue-500/10 blur-3xl">
+            </div>
+            <div class="grid md:grid-cols-2 gap-6 md:gap-8 p-5 md:py-6 lg:p-8">
+              <div class="space-y-3 max-w-xl mx-auto md:mx-0">
+                <h1 class="font-bold text-white leading-tight md:leading-snug text-[clamp(1.75rem,3.8vw,3.2rem)]">
+                  AI-powered resume-to-job matching for professionals
+                </h1>
+                <p class="text-gray-300 text-base md:text-lg leading-relaxed max-w-prose">
+                  Upload your resume, paste a job description, and get a
+                  tailored match score, skills insight, and a ready-to-send
+                  cover letter.
+                </p>
+                <div class="flex flex-col md:flex-row items-stretch md:items-center gap-2 pt-2">
+                  <button onclick="startAnalysis()"
+                    class="w-full md:w-auto px-5 py-2.5 bg-gradient-to-r from-[#22d3ee] to-[#38bdf8] text-gray-900 font-semibold rounded-lg hover:opacity-90 focus-visible:ring-2 focus-visible:ring-[#22d3ee]/50 transition-smooth shadow-sm">
+                    Start Analysis
+                  </button>
+                  <button onclick="navigateTo('help')"
+                    class="w-full md:w-auto px-5 py-2.5 bg-white/10 text-gray-200 font-semibold rounded-lg border border-white/20 hover:bg-white/15 focus-visible:ring-2 focus-visible:ring-white/30 transition-smooth">
+                    Learn More
+                  </button>
                 </div>
-                <div class="hidden md:flex items-center justify-center">
-                  <div class="w-full max-w-sm">
-                    <div
-                      class="rounded-xl border border-white/10 bg-white/5 p-5"
-                    >
-                      <div
-                        class="h-3 w-3/4 rounded-full bg-white/10 mb-4"
-                      ></div>
-                      <div class="space-y-3">
-                        <div class="h-2 w-full rounded bg-white/10"></div>
-                        <div class="h-2 w-5/6 rounded bg-white/10"></div>
-                        <div class="h-2 w-2/3 rounded bg-white/10"></div>
-                        <div class="h-2 w-4/5 rounded bg-white/10"></div>
-                      </div>
-                      <div class="mt-6 grid grid-cols-2 gap-3">
-                        <div
-                          class="h-16 rounded-lg bg-white/10 border border-white/10"
-                        ></div>
-                        <div
-                          class="h-16 rounded-lg bg-white/10 border border-white/10"
-                        ></div>
-                      </div>
+              </div>
+              <div class="hidden md:flex items-center justify-center">
+                <div class="w-full max-w-sm">
+                  <div class="rounded-xl border border-white/10 bg-white/5 p-5">
+                    <div class="h-3 w-3/4 rounded-full bg-white/10 mb-4"></div>
+                    <div class="space-y-3">
+                      <div class="h-2 w-full rounded bg-white/10"></div>
+                      <div class="h-2 w-5/6 rounded bg-white/10"></div>
+                      <div class="h-2 w-2/3 rounded bg-white/10"></div>
+                      <div class="h-2 w-4/5 rounded bg-white/10"></div>
+                    </div>
+                    <div class="mt-6 grid grid-cols-2 gap-3">
+                      <div class="h-16 rounded-lg bg-white/10 border border-white/10"></div>
+                      <div class="h-16 rounded-lg bg-white/10 border border-white/10"></div>
                     </div>
                   </div>
                 </div>
               </div>
-            </section>
-            <!-- Pro Tip Bar -->
-            <div
-              id="proTip"
-              class="mb-8 bg-blue-50 border-l-4 border-primary rounded-lg p-4 animate-fade-in hidden"
-            >
-              <div class="flex items-start">
-                <svg
-                  class="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  ></path>
+            </div>
+          </section>
+          <!-- Pro Tip Bar -->
+          <div id="proTip" class="mb-8 bg-blue-50 border-l-4 border-primary rounded-lg p-4 animate-fade-in hidden">
+            <div class="flex items-start">
+              <svg class="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <div class="flex-1">
+                <p class="text-sm font-medium text-gray-900">Pro Tip</p>
+                <p class="text-sm text-gray-600 mt-1" id="proTipText">
+                  Sign in to save your analyses and access them later.
+                </p>
+              </div>
+              <button onclick="hideProTip()" class="ml-4 text-gray-400 hover:text-gray-600">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
-                <div class="flex-1">
-                  <p class="text-sm font-medium text-gray-900">Pro Tip</p>
-                  <p class="text-sm text-gray-600 mt-1" id="proTipText">
-                    Sign in to save your analyses and access them later.
-                  </p>
+              </button>
+            </div>
+          </div>
+
+          <div id="workflowContent" class="hidden space-y-6 md:space-y-8">
+            <!-- Step 1: Upload Resume -->
+            <div id="step1"
+              class="step-content bg-card rounded-xl shadow-sm border border-white/10 p-4 sm:p-5 lg:p-6 animate-fade-in">
+              <div class="mb-6">
+                <h2 class="text-2xl font-bold text-textPrimary mb-2">
+                  Upload Your Resume
+                </h2>
+                <p class="text-textSecondary">
+                  Upload your resume in PDF format to get started with the
+                  analysis.
+                </p>
+              </div>
+
+              <div class="mb-6">
+                <label for="resume" class="block text-sm font-medium text-textSecondary mb-3">Resume File (PDF)</label>
+                <div class="relative">
+                  <input type="file" id="resume" name="resume" accept=".pdf" required class="hidden"
+                    onchange="handleFileSelect(event)" />
+                  <label for="resume" id="fileDropZone"
+                    class="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-white/20 rounded-lg cursor-pointer bg-white/5 hover:border-primary hover:bg-white/10 transition-smooth">
+                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                      <svg class="w-12 h-12 mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12">
+                        </path>
+                      </svg>
+                      <p class="mb-2 text-sm text-textSecondary">
+                        <span class="font-semibold">Click to upload</span> or
+                        drag and drop
+                      </p>
+                      <p class="text-xs text-textSecondary">PDF (MAX. 5MB)</p>
+                    </div>
+                  </label>
+                  <div id="fileInfo" class="mt-3 text-sm text-textSecondary"></div>
                 </div>
-                <button
-                  onclick="hideProTip()"
-                  class="ml-4 text-gray-400 hover:text-gray-600"
-                >
-                  <svg
-                    class="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M6 18L18 6M6 6l12 12"
-                    ></path>
+              </div>
+
+              <div class="flex md:justify-end">
+                <button onclick="goToStep(2)" id="step1Next" disabled
+                  class="w-full md:w-auto px-6 py-2.5 bg-primary text-gray-900 font-medium rounded-lg hover:opacity-90 transition-smooth disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2">
+                  <span>Next: Job Description</span>
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                   </svg>
                 </button>
               </div>
             </div>
 
-            <div id="workflowContent" class="hidden space-y-6 md:space-y-8">
-              <!-- Step 1: Upload Resume -->
-              <div
-                id="step1"
-                class="step-content bg-card rounded-xl shadow-sm border border-white/10 p-4 sm:p-5 lg:p-6 animate-fade-in"
-              >
-                <div class="mb-6">
-                  <h2 class="text-2xl font-bold text-textPrimary mb-2">
-                    Upload Your Resume
-                  </h2>
-                  <p class="text-textSecondary">
-                    Upload your resume in PDF format to get started with the
-                    analysis.
-                  </p>
-                </div>
-
-                <div class="mb-6">
-                  <label
-                    for="resume"
-                    class="block text-sm font-medium text-textSecondary mb-3"
-                    >Resume File (PDF)</label
-                  >
-                  <div class="relative">
-                    <input
-                      type="file"
-                      id="resume"
-                      name="resume"
-                      accept=".pdf"
-                      required
-                      class="hidden"
-                      onchange="handleFileSelect(event)"
-                    />
-                    <label
-                      for="resume"
-                      id="fileDropZone"
-                      class="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-white/20 rounded-lg cursor-pointer bg-white/5 hover:border-primary hover:bg-white/10 transition-smooth"
-                    >
-                      <div
-                        class="flex flex-col items-center justify-center pt-5 pb-6"
-                      >
-                        <svg
-                          class="w-12 h-12 mb-4 text-gray-300"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                          ></path>
-                        </svg>
-                        <p class="mb-2 text-sm text-textSecondary">
-                          <span class="font-semibold">Click to upload</span> or
-                          drag and drop
-                        </p>
-                        <p class="text-xs text-textSecondary">PDF (MAX. 5MB)</p>
-                      </div>
-                    </label>
-                    <div id="fileInfo" class="mt-3 text-sm text-textSecondary"></div>
-                  </div>
-                </div>
-
-                <div class="flex md:justify-end">
-                  <button
-                    onclick="goToStep(2)"
-                    id="step1Next"
-                    disabled
-                    class="w-full md:w-auto px-6 py-2.5 bg-primary text-gray-900 font-medium rounded-lg hover:opacity-90 transition-smooth disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
-                  >
-                    <span>Next: Job Description</span>
-                    <svg
-                      class="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M9 5l7 7-7 7"
-                      ></path>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-
-              <!-- Step 2: Job Description -->
-              <div
-                id="step2"
-                class="step-content hidden bg-card rounded-xl shadow-sm border border-white/10 p-4 sm:p-5 lg:p-6"
-              >
-                <div class="mb-6">
-                  <h2 class="text-2xl font-bold text-textPrimary mb-2">
-                    Paste Job Description
-                  </h2>
-                  <p class="text-textSecondary">
-                    Paste the complete job description to analyze how well your
-                    resume matches.
-                  </p>
-                </div>
-
-                <div class="mb-6">
-                  <label
-                    for="jobDescription"
-                    class="block text-sm font-medium text-textSecondary mb-3"
-                    >Job Description</label
-                  >
-                  <textarea
-                    id="jobDescription"
-                    name="jobDescription"
-                    rows="12"
-                    placeholder="Paste the complete job description here..."
-                    required
-                    class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-smooth resize-y font-sans text-textPrimary placeholder:text-textSecondary"
-                    oninput="handleJobDescInput(event)"
-                  ></textarea>
-                  <p class="mt-2 text-xs text-textSecondary">
-                    The more detailed the job description, the better the
-                    analysis results.
-                  </p>
-                </div>
-
-                <div
-                  class="flex flex-col md:flex-row items-stretch justify-between gap-3"
-                >
-                  <button
-                    onclick="goToStep(1)"
-                    class="w-full md:w-auto px-6 py-2.5 bg-transparent text-textSecondary font-medium rounded-lg border border-white/20 hover:bg-white/10 transition-smooth flex items-center space-x-2"
-                  >
-                    <svg
-                      class="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M15 19l-7-7 7-7"
-                      ></path>
-                    </svg>
-                    <span>Back</span>
-                  </button>
-                  <button
-                    onclick="goToStep(3)"
-                    id="step2Next"
-                    disabled
-                    class="w-full md:w-auto px-6 py-2.5 bg-primary text-gray-900 font-medium rounded-lg hover:opacity-90 transition-smooth disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
-                  >
-                    <span>Next: Generate Results</span>
-                    <svg
-                      class="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M9 5l7 7-7 7"
-                      ></path>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-
-              <!-- Step 3: Generate Results -->
-              <div
-                id="step3"
-                class="step-content hidden bg-card rounded-xl shadow-sm border border-white/10 p-4 sm:p-5 lg:p-6"
-              >
-                <div class="mb-6">
-                  <h2 class="text-2xl font-bold text-textPrimary mb-2">
-                    Generate Results
-                  </h2>
-                  <p class="text-textSecondary">
-                    Ready to analyze your resume? Click the button below to
-                    generate your personalized insights.
-                  </p>
-                </div>
-
-                <div
-                  class="bg-white/5 border border-white/10 rounded-lg p-5 mb-6"
-                >
-                  <h3 class="text-lg font-semibold text-textPrimary mb-3">
-                    What You'll Get:
-                  </h3>
-                  <ul class="space-y-2 text-textSecondary">
-                    <li class="flex items-start">
-                      <svg
-                        class="w-5 h-5 text-primary mr-2 mt-0.5 flex-shrink-0"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M5 13l4 4L19 7"
-                        ></path></svg
-                      ><span
-                        >Match score analysis with detailed explanation</span
-                      >
-                    </li>
-                    <li class="flex items-start">
-                      <svg
-                        class="w-5 h-5 text-primary mr-2 mt-0.5 flex-shrink-0"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M5 13l4 4L19 7"
-                        ></path></svg
-                      ><span
-                        >Personalized cover letter tailored to the job</span
-                      >
-                    </li>
-                    <li class="flex items-start">
-                      <svg
-                        class="w-5 h-5 text-primary mr-2 mt-0.5 flex-shrink-0"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M5 13l4 4L19 7"
-                        ></path></svg
-                      ><span>Interview preparation questions</span>
-                    </li>
-                    <li class="flex items-start">
-                      <svg
-                        class="w-5 h-5 text-primary mr-2 mt-0.5 flex-shrink-0"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M5 13l4 4L19 7"
-                        ></path></svg
-                      ><span>Resume improvement suggestions</span>
-                    </li>
-                    <li class="flex items-start">
-                      <svg
-                        class="w-5 h-5 text-primary mr-2 mt-0.5 flex-shrink-0"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M5 13l4 4L19 7"
-                        ></path></svg
-                      ><span>Skills gap analysis</span>
-                    </li>
-                  </ul>
-                </div>
-
-                <div
-                  class="flex flex-col md:flex-row items-stretch justify-between gap-3"
-                >
-                  <button
-                    onclick="goToStep(2)"
-                    class="w-full md:w-auto px-6 py-2.5 bg-transparent text-textSecondary font-medium rounded-lg border border-white/20 hover:bg-white/10 transition-smooth flex items-center space-x-2"
-                  >
-                    <svg
-                      class="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M15 19l-7-7 7-7"
-                      ></path>
-                    </svg>
-                    <span>Back</span>
-                  </button>
-                  <button
-                    onclick="generateResults()"
-                    id="generateBtn"
-                    class="w-full md:w-auto px-8 py-3 bg-primary text-gray-900 font-semibold rounded-lg hover:opacity-90 transition-smooth shadow-sm flex items-center space-x-2"
-                  >
-                    <svg
-                      class="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M13 10V3L4 14h7v7l9-11h-7z"
-                      ></path>
-                    </svg>
-                    <span id="generateText">Generate Results</span>
-                    <span id="generateLoading" class="hidden"
-                      >Analyzing...</span
-                    >
-                  </button>
-                </div>
-              </div>
-
-              <!-- Loading State -->
-              <div
-                id="loading"
-                class="hidden bg-card rounded-xl shadow-sm border border-white/10 p-8 text-center"
-              >
-                <div
-                  class="inline-block animate-spin rounded-full h-16 w-16 border-4 border-primary border-t-transparent mb-6"
-                ></div>
-                <p class="text-lg font-medium text-textPrimary mb-2">
-                  Analyzing your resume with AI...
-                </p>
-                <p class="text-sm text-textSecondary">
-                  This may take 30-60 seconds. Our hiring expert AI is
-                  evaluating your resume against the job requirements.
+            <!-- Step 2: Job Description -->
+            <div id="step2"
+              class="step-content hidden bg-card rounded-xl shadow-sm border border-white/10 p-4 sm:p-5 lg:p-6">
+              <div class="mb-6">
+                <h2 class="text-2xl font-bold text-textPrimary mb-2">
+                  Paste Job Description
+                </h2>
+                <p class="text-textSecondary">
+                  Paste the complete job description to analyze how well your
+                  resume matches.
                 </p>
               </div>
 
-              <!-- Error Display -->
-              <div
-                id="error"
-                class="hidden bg-red-900/20 border-l-4 border-red-500 rounded-lg p-4 mb-6"
-              >
-                <div class="flex">
-                  <div class="flex-shrink-0">
-                    <svg
-                      class="h-5 w-5 text-red-400"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                  <div class="ml-3">
-                    <p id="errorMessage" class="text-sm text-red-300"></p>
-                  </div>
-                </div>
+              <div class="mb-6">
+                <label for="jobDescription" class="block text-sm font-medium text-textSecondary mb-3">Job
+                  Description</label>
+                <textarea id="jobDescription" name="jobDescription" rows="12"
+                  placeholder="Paste the complete job description here..." required
+                  class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-smooth resize-y font-sans text-textPrimary placeholder:text-textSecondary"
+                  oninput="handleJobDescInput(event)"></textarea>
+                <p class="mt-2 text-xs text-textSecondary">
+                  The more detailed the job description, the better the
+                  analysis results.
+                </p>
               </div>
 
-              <!-- Step 4: Results -->
-              <div id="step4" class="step-content hidden space-y-6">
-                <div
-                  class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6"
-                >
-                  <div>
-                    <h2 class="text-2xl font-bold text-textPrimary">
-                      Your Results
-                    </h2>
-                    <p class="text-textSecondary mt-1">
-                      Comprehensive analysis of your resume match
-                    </p>
-                  </div>
-                  <button
-                    onclick="resetApplication()"
-                    class="w-full md:w-auto px-4 py-2 bg-transparent text-textSecondary font-medium rounded-lg border border-white/20 hover:bg-white/10 transition-smooth text-sm"
-                  >
+              <div class="flex flex-col md:flex-row items-stretch justify-between gap-3">
+                <button onclick="goToStep(1)"
+                  class="w-full md:w-auto px-6 py-2.5 bg-transparent text-textSecondary font-medium rounded-lg border border-white/20 hover:bg-white/10 transition-smooth flex items-center space-x-2">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                  </svg>
+                  <span>Back</span>
+                </button>
+                <button onclick="goToStep(3)" id="step2Next" disabled
+                  class="w-full md:w-auto px-6 py-2.5 bg-primary text-gray-900 font-medium rounded-lg hover:opacity-90 transition-smooth disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2">
+                  <span>Next: Generate Results</span>
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Step 3: Generate Results -->
+            <div id="step3"
+              class="step-content hidden bg-card rounded-xl shadow-sm border border-white/10 p-4 sm:p-5 lg:p-6">
+              <div class="mb-6">
+                <h2 class="text-2xl font-bold text-textPrimary mb-2">
+                  Generate Results
+                </h2>
+                <p class="text-textSecondary">
+                  Ready to analyze your resume? Click the button below to
+                  generate your personalized insights.
+                </p>
+              </div>
+
+              <div class="bg-white/5 border border-white/10 rounded-lg p-5 mb-6">
+                <h3 class="text-lg font-semibold text-textPrimary mb-3">
+                  What You'll Get:
+                </h3>
+                <ul class="space-y-2 text-textSecondary">
+                  <li class="flex items-start">
+                    <svg class="w-5 h-5 text-primary mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor"
+                      viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg><span>Match score analysis with detailed explanation</span>
+                  </li>
+                  <li class="flex items-start">
+                    <svg class="w-5 h-5 text-primary mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor"
+                      viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg><span>Personalized cover letter tailored to the job</span>
+                  </li>
+                  <li class="flex items-start">
+                    <svg class="w-5 h-5 text-primary mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor"
+                      viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg><span>Interview preparation questions</span>
+                  </li>
+                  <li class="flex items-start">
+                    <svg class="w-5 h-5 text-primary mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor"
+                      viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg><span>Resume improvement suggestions</span>
+                  </li>
+                  <li class="flex items-start">
+                    <svg class="w-5 h-5 text-primary mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor"
+                      viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg><span>Skills gap analysis</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="flex flex-col md:flex-row items-stretch justify-between gap-3">
+                <button onclick="goToStep(2)"
+                  class="w-full md:w-auto px-6 py-2.5 bg-transparent text-textSecondary font-medium rounded-lg border border-white/20 hover:bg-white/10 transition-smooth flex items-center space-x-2">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                  </svg>
+                  <span>Back</span>
+                </button>
+                <button onclick="generateResults()" id="generateBtn"
+                  class="w-full md:w-auto px-8 py-3 bg-primary text-gray-900 font-semibold rounded-lg hover:opacity-90 transition-smooth shadow-sm flex items-center space-x-2">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                  </svg>
+                  <span id="generateText">Generate Results</span>
+                  <span id="generateLoading" class="hidden">Analyzing...</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loading" class="hidden bg-card rounded-xl shadow-sm border border-white/10 p-8 text-center">
+              <div
+                class="inline-block animate-spin rounded-full h-16 w-16 border-4 border-primary border-t-transparent mb-6">
+              </div>
+              <p class="text-lg font-medium text-textPrimary mb-2">
+                Analyzing your resume with AI...
+              </p>
+              <p class="text-sm text-textSecondary">
+                This may take 30-60 seconds. Our hiring expert AI is
+                evaluating your resume against the job requirements.
+              </p>
+            </div>
+
+            <!-- Error Display -->
+            <div id="error" class="hidden bg-red-900/20 border-l-4 border-red-500 rounded-lg p-4 mb-6">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                      clip-rule="evenodd" />
+                  </svg>
+                </div>
+                <div class="ml-3">
+                  <p id="errorMessage" class="text-sm text-red-300"></p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 4: Results -->
+            <div id="step4" class="step-content hidden space-y-6">
+              <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6">
+                <div>
+                  <h2 class="text-2xl font-bold text-textPrimary">
+                    Your Results
+                  </h2>
+                  <p class="text-textSecondary mt-1">
+                    Comprehensive analysis of your resume match
+                  </p>
+                </div>
+                <div class="flex flex-col md:flex-row gap-3">
+                  <button onclick="saveAnalysis()" id="saveBtn"
+                    class="w-full md:w-auto px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-smooth text-sm flex items-center justify-center space-x-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4">
+                      </path>
+                    </svg>
+                    <span>Save to Dashboard</span>
+                  </button>
+                  <button onclick="resetApplication()"
+                    class="w-full md:w-auto px-4 py-2 bg-transparent text-textSecondary font-medium rounded-lg border border-white/20 hover:bg-white/10 transition-smooth text-sm">
                     Start Over
                   </button>
                 </div>
+              </div>
 
-                <!-- Match Score Card -->
-                <div
-                  class="bg-card rounded-xl shadow-sm border border-white/10 p-4 sm:p-6 lg:p-8"
-                >
-                  <div class="text-center mb-6">
-                    <h3
-                      class="text-lg font-semibold text-textSecondary mb-2 uppercase tracking-wide"
-                    >
-                      Match Score
-                    </h3>
-                    <div class="text-6xl font-bold mb-4"style="color: white;" id="scoreValue">0</div>
-                  </div>
-                  <div
-                    class="w-full bg-white/5 rounded-full h-8 mb-4 overflow-hidden"
-                  >
-                    <div
-                      id="progressBar"
-                      class="progress-bar h-8 rounded-full flex items-center justify-end pr-3"
-                    >
-                      <span
-                        id="progressText"
-                        class="text-white text-sm font-semibold"
-                        >0%</span
-                      >
-                    </div>
-                  </div>
-                  <div id="scoreExplanation" class="mt-4 space-y-2"></div>
-                </div>
-
-                <!-- Skills Section -->
-                <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-6">
-                  <div
-                    class="bg-card rounded-xl shadow-sm border border-white/10 p-6"
-                  >
-                    <h3
-                      class="text-lg font-bold text-textPrimary mb-4 flex items-center"
-                    >
-                      <svg
-                        class="w-5 h-5 text-green-500 mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M5 13l4 4L19 7"
-                        ></path>
-                      </svg>
-                      Matching Skills
-                    </h3>
-                    <div id="matchingSkills" class="flex flex-wrap gap-2">
-                      <span class="text-textSecondary text-sm">Calculating...</span>
-                    </div>
-                  </div>
-                  <div
-                    class="bg-card rounded-xl shadow-sm border border-white/10 p-6"
-                  >
-                    <h3
-                      class="text-lg font-bold text-textPrimary mb-4 flex items-center"
-                    >
-                      <svg
-                        class="w-5 h-5 text-red-500 mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M6 18L18 6M6 6l12 12"
-                        ></path>
-                      </svg>
-                      Missing Skills
-                    </h3>
-                    <div id="missingSkills" class="flex flex-wrap gap-2">
-                      <span class="text-textSecondary text-sm"
-                        >No missing skills</span
-                      >
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Resume Improvements -->
-                <div
-                  class="bg-card rounded-xl shadow-sm border border-white/10 p-4 sm:p-6 lg:p-8"
-                >
-                  <h3
-                    class="text-lg font-bold text-textPrimary mb-4 flex items-center"
-                  >
-                    <svg
-                      class="w-5 h-5 text-yellow-500 mr-2"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-                      ></path>
-                    </svg>
-                    Resume Improvement Suggestions
+              <!-- Match Score Card -->
+              <div class="bg-card rounded-xl shadow-sm border border-white/10 p-4 sm:p-6 lg:p-8">
+                <div class="text-center mb-6">
+                  <h3 class="text-lg font-semibold text-textSecondary mb-2 uppercase tracking-wide">
+                    Match Score
                   </h3>
-                  <ul id="resumeImprovements" class="space-y-3"></ul>
+                  <div class="text-6xl font-bold mb-4" style="color: white;" id="scoreValue">0</div>
                 </div>
+                <div class="w-full bg-white/5 rounded-full h-8 mb-4 overflow-hidden">
+                  <div id="progressBar" class="progress-bar h-8 rounded-full flex items-center justify-end pr-3">
+                    <span id="progressText" class="text-white text-sm font-semibold">0%</span>
+                  </div>
+                </div>
+                <div id="scoreExplanation" class="mt-4 space-y-2"></div>
+              </div>
 
-                <!-- Cover Letter - Collapsible -->
-                <div
-                  class="bg-card rounded-xl shadow-sm border border-white/10 overflow-hidden"
-                >
-                  <button
-                    onclick="toggleCollapsible('coverLetterContent')"
-                    class="w-full px-6 py-4 bg-white/5 hover:bg-white/10 transition-smooth flex items-center justify-between"
-                  >
-                    <h3
-                      class="text-lg font-bold text-textPrimary flex items-center"
-                    >
-                      <svg
-                        class="w-5 h-5 text-primary mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                        ></path>
-                      </svg>
-                      Personalized Cover Letter
-                    </h3>
-                    <svg
-                      id="coverLetterIcon"
-                      class="w-5 h-5 text-textSecondary transform transition-transform rotate-0"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M19 9l-7 7-7-7"
-                      ></path>
+              <!-- Skills Section -->
+              <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-card rounded-xl shadow-sm border border-white/10 p-6">
+                  <h3 class="text-lg font-bold text-textPrimary mb-4 flex items-center">
+                    <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
-                  </button>
-                  <div id="coverLetterContent" class="collapsible-content">
-                    <div class="p-6">
-                      <div
-                        id="coverLetter"
-                        class="bg-white/5 rounded-lg p-6 text-textPrimary leading-relaxed whitespace-pre-wrap mb-4 max-h-96 overflow-y-auto border border-white/10"
-                      ></div>
-                      <button
-                        onclick="copyToClipboard('coverLetter', 'Cover Letter')"
-                        class="w-full px-4 py-2.5 bg-primary text-gray-900 font-medium rounded-lg hover:opacity-90 transition-smooth flex items-center justify-center space-x-2"
-                      >
-                        <svg
-                          class="w-5 h-5"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                          ></path>
-                        </svg>
-                        <span>Copy Cover Letter</span>
-                      </button>
-                    </div>
+                    Matching Skills
+                  </h3>
+                  <div id="matchingSkills" class="flex flex-wrap gap-2">
+                    <span class="text-textSecondary text-sm">Calculating...</span>
                   </div>
                 </div>
-
-                <!-- Interview Questions - Collapsible -->
-                <div
-                  class="bg-card rounded-xl shadow-sm border border-white/10 overflow-hidden"
-                >
-                  <button
-                    onclick="toggleCollapsible('interviewQuestionsContent')"
-                    class="w-full px-6 py-4 bg-white/5 hover:bg-white/10 transition-smooth flex items-center justify-between"
-                  >
-                    <h3
-                      class="text-lg font-bold text-textPrimary flex items-center"
-                    >
-                      <svg
-                        class="w-5 h-5 text-primary mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        ></path>
-                      </svg>
-                      Interview Questions to Prepare For
-                    </h3>
-                    <svg
-                      id="interviewQuestionsIcon"
-                      class="w-5 h-5 text-textSecondary transform transition-transform rotate-0"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M19 9l-7 7-7-7"
-                      ></path>
+                <div class="bg-card rounded-xl shadow-sm border border-white/10 p-6">
+                  <h3 class="text-lg font-bold text-textPrimary mb-4 flex items-center">
+                    <svg class="w-5 h-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                      </path>
                     </svg>
-                  </button>
-                  <div
-                    id="interviewQuestionsContent"
-                    class="collapsible-content"
-                  >
-                    <div class="p-6">
-                      <ol id="interviewQuestions" class="space-y-4 mb-4"></ol>
-                      <button
-                        onclick="copyAllQuestions()"
-                        class="w-full px-4 py-2.5 bg-primary text-gray-900 font-medium rounded-lg hover:opacity-90 transition-smooth flex items-center justify-center space-x-2"
-                      >
-                        <svg
-                          class="w-5 h-5"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                          ></path>
-                        </svg>
-                        <span>Copy All Questions</span>
-                      </button>
+                    Missing Skills
+                  </h3>
+                  <div id="missingSkills" class="flex flex-wrap gap-2">
+                    <span class="text-textSecondary text-sm">No missing skills</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Resume Improvements -->
+              <div class="bg-card rounded-xl shadow-sm border border-white/10 p-4 sm:p-6 lg:p-8">
+                <h3 class="text-lg font-bold text-textPrimary mb-4 flex items-center">
+                  <svg class="w-5 h-5 text-yellow-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z">
+                    </path>
+                  </svg>
+                  Resume Improvement Suggestions
+                </h3>
+                <ul id="resumeImprovements" class="space-y-3"></ul>
+              </div>
+
+              <!-- Cover Letter - Collapsible -->
+              <div class="bg-card rounded-xl shadow-sm border border-white/10 overflow-hidden">
+                <button onclick="toggleCollapsible('coverLetterContent')"
+                  class="w-full px-6 py-4 bg-white/5 hover:bg-white/10 transition-smooth flex items-center justify-between">
+                  <h3 class="text-lg font-bold text-textPrimary flex items-center">
+                    <svg class="w-5 h-5 text-primary mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                      </path>
+                    </svg>
+                    Personalized Cover Letter
+                  </h3>
+                  <svg id="coverLetterIcon" class="w-5 h-5 text-textSecondary transform transition-transform rotate-0"
+                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </button>
+                <div id="coverLetterContent" class="collapsible-content">
+                  <div class="p-6">
+                    <div id="coverLetter"
+                      class="bg-white/5 rounded-lg p-6 text-textPrimary leading-relaxed whitespace-pre-wrap mb-4 max-h-96 overflow-y-auto border border-white/10">
                     </div>
+                    <button onclick="copyToClipboard('coverLetter', 'Cover Letter')"
+                      class="w-full px-4 py-2.5 bg-primary text-gray-900 font-medium rounded-lg hover:opacity-90 transition-smooth flex items-center justify-center space-x-2">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z">
+                        </path>
+                      </svg>
+                      <span>Copy Cover Letter</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Interview Questions - Collapsible -->
+              <div class="bg-card rounded-xl shadow-sm border border-white/10 overflow-hidden">
+                <button onclick="toggleCollapsible('interviewQuestionsContent')"
+                  class="w-full px-6 py-4 bg-white/5 hover:bg-white/10 transition-smooth flex items-center justify-between">
+                  <h3 class="text-lg font-bold text-textPrimary flex items-center">
+                    <svg class="w-5 h-5 text-primary mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                      </path>
+                    </svg>
+                    Interview Questions to Prepare For
+                  </h3>
+                  <svg id="interviewQuestionsIcon"
+                    class="w-5 h-5 text-textSecondary transform transition-transform rotate-0" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </button>
+                <div id="interviewQuestionsContent" class="collapsible-content">
+                  <div class="p-6">
+                    <ol id="interviewQuestions" class="space-y-4 mb-4"></ol>
+                    <button onclick="copyAllQuestions()"
+                      class="w-full px-4 py-2.5 bg-primary text-gray-900 font-medium rounded-lg hover:opacity-90 transition-smooth flex items-center justify-center space-x-2">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z">
+                        </path>
+                      </svg>
+                      <span>Copy All Questions</span>
+                    </button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-
-        <!-- My Applications Page -->
-        <div id="page-applications" class="page">
-          <div class="max-w-7xl mx-auto w-full p-4 sm:p-6 lg:p-8">
-            <div class="mb-6">
-              <h1 class="text-3xl font-bold text-textPrimary mb-2">
-                My Applications
-              </h1>
-              <p class="text-textSecondary">
-                View your past resume analyses and results
-              </p>
-            </div>
-
-            <div id="applicationsContent" class="space-y-4">
-              <div
-                class="bg-card rounded-xl shadow-sm border border-white/10 p-8 text-center"
-              >
-                <p class="text-textSecondary">Loading your applications...</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Dashboard Page -->
-        <div id="page-dashboard" class="page">
-          <div class="max-w-7xl mx-auto w-full p-4 sm:p-6 lg:p-8">
-            <div class="mb-6">
-              <h1 class="text-3xl font-bold text-textPrimary mb-2">Dashboard</h1>
-              <p class="text-textSecondary">
-                Your application statistics and insights
-              </p>
-            </div>
-
-            <div
-              id="dashboardContent"
-              class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3"
-            >
-              <div
-                class="bg-card rounded-xl shadow-sm border border-white/10 p-6"
-              >
-                <h3 class="text-sm font-medium text-textSecondary uppercase mb-2">
-                  Total Analyses
-                </h3>
-                <p class="text-3xl font-bold text-primary" id="totalAnalyses">
-                  -
-                </p>
-              </div>
-              <div
-                class="bg-card rounded-xl shadow-sm border border-white/10 p-6"
-              >
-                <h3 class="text-sm font-medium text-textSecondary uppercase mb-2">
-                  Average Score
-                </h3>
-                <p class="text-3xl font-bold text-primary" id="averageScore">
-                  -
-                </p>
-              </div>
-              <div
-                class="bg-card rounded-xl shadow-sm border border-white/10 p-6"
-              >
-                <h3 class="text-sm font-medium text-textSecondary uppercase mb-2">
-                  Last Analysis
-                </h3>
-                <p class="text-sm text-textSecondary" id="lastAnalysis">-</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Help Page -->
-        <div id="page-help" class="page">
-          <div class="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
-            <div class="mb-6">
-              <h1 class="text-3xl font-bold text-textPrimary mb-2">
-                Help & Support
-              </h1>
-              <p class="text-textSecondary">Get answers to common questions</p>
-            </div>
-
-            <div
-              class="bg-card rounded-xl shadow-sm border border-white/10 p-6 space-y-6"
-            >
-              <div>
-                <h2 class="text-xl font-semibold text-textPrimary mb-3">
-                  How to Use ApplyMate
-                </h2>
-                <ol class="list-decimal list-inside space-y-2 text-textSecondary">
-                  <li>Upload your resume in PDF format</li>
-                  <li>Paste the complete job description</li>
-                  <li>Click "Generate Results" to analyze your resume</li>
-                  <li>
-                    Review your match score, cover letter, and interview
-                    questions
-                  </li>
-                  <li>Use the suggestions to improve your resume</li>
-                </ol>
-              </div>
-
-              <div>
-                <h2 class="text-xl font-semibold text-textPrimary mb-3">
-                  Frequently Asked Questions
-                </h2>
-                <div class="space-y-4">
-                  <div>
-                    <h3 class="font-semibold text-textPrimary mb-1">
-                      What file formats are supported?
-                    </h3>
-                    <p class="text-textSecondary">
-                      Currently, only PDF files are supported for resume
-                      uploads.
-                    </p>
-                  </div>
-                  <div>
-                    <h3 class="font-semibold text-textPrimary mb-1">
-                      How accurate is the match score?
-                    </h3>
-                    <p class="text-textSecondary">
-                      The match score is calculated using AI analysis of skills,
-                      experience, and qualifications. It provides a good
-                      estimate but should be used as a guide.
-                    </p>
-                  </div>
-                  <div>
-                    <h3 class="font-semibold text-textPrimary mb-1">
-                      Are my analyses saved?
-                    </h3>
-                    <p class="text-textSecondary">
-                      Yes, if you're signed in, all your analyses are saved and
-                      can be accessed from the "My Applications" page.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h2 class="text-xl font-semibold text-textPrimary mb-3">
-                  Need More Help?
-                </h2>
-                <p class="text-textSecondary">
-                  If you have additional questions or need support, please
-                  contact us at support@applymate.com
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
-    </div>
-
-    <!-- Login/Signup Modal -->
-    <div
-      id="authModal"
-      class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
-    >
-      <div
-        class="bg-card rounded-xl shadow-xl border border-white/10 max-w-md w-full p-6 animate-fade-in"
-      >
-        <div class="flex justify-between items-center mb-6">
-          <h2 class="text-2xl font-bold text-textPrimary" id="authModalTitle">
-            Login
-          </h2>
-          <button
-            onclick="closeAuthModal()"
-            class="text-textSecondary hover:text-textPrimary"
-          >
-            <svg
-              class="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              ></path>
-            </svg>
-          </button>
-        </div>
-
-        <div
-          id="authError"
-          class="hidden bg-red-900/20 border border-red-500 rounded-lg p-3 mb-4"
-        >
-          <p class="text-sm text-red-300" id="authErrorMessage"></p>
-        </div>
-
-        <form id="authForm" onsubmit="handleAuth(event)" class="space-y-4">
-          <div>
-            <label
-              for="authEmail"
-              class="block text-sm font-medium text-textSecondary mb-1"
-              >Email</label
-            >
-            <input
-              type="email"
-              id="authEmail"
-              required
-              class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-textPrimary placeholder:text-textSecondary focus:ring-2 focus:ring-primary focus:border-primary outline-none"
-            />
-          </div>
-          <div>
-            <label
-              for="authPassword"
-              class="block text-sm font-medium text-textSecondary mb-1"
-              >Password</label
-            >
-            <input
-              type="password"
-              id="authPassword"
-              required
-              class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-textPrimary placeholder:text-textSecondary focus:ring-2 focus:ring-primary focus:border-primary outline-none"
-            />
-          </div>
-          <button
-            type="submit"
-            id="authSubmit"
-            class="w-full px-4 py-2.5 bg-primary text-gray-900 font-medium rounded-lg hover:opacity-90 transition-smooth"
-          >
-            Login
-          </button>
-        </form>
-
-        <div class="mt-4 text-center">
-          <button
-            onclick="toggleAuthMode()"
-            class="text-sm text-primary hover:underline"
-            id="authToggle"
-          >
-            Don't have an account? Sign up
-          </button>
         </div>
       </div>
+
+      <!-- My Applications Page -->
+      <div id="page-applications" class="page">
+        <div class="max-w-7xl mx-auto w-full p-4 sm:p-6 lg:p-8">
+          <div class="mb-6">
+            <h1 class="text-3xl font-bold text-textPrimary mb-2">
+              My Applications
+            </h1>
+            <p class="text-textSecondary">
+              View your past resume analyses and results
+            </p>
+          </div>
+
+          <div id="applicationsContent" class="space-y-4">
+            <div class="bg-card rounded-xl shadow-sm border border-white/10 p-8 text-center">
+              <p class="text-textSecondary">Loading your applications...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard Page -->
+      <div id="page-dashboard" class="page">
+        <div class="max-w-7xl mx-auto w-full p-4 sm:p-6 lg:p-8">
+          <div class="mb-6">
+            <h1 class="text-3xl font-bold text-textPrimary mb-2">Dashboard</h1>
+            <p class="text-textSecondary">
+              Your application statistics and insights
+            </p>
+          </div>
+
+          <div id="dashboardContent" class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
+            <div class="bg-card rounded-xl shadow-sm border border-white/10 p-6">
+              <h3 class="text-sm font-medium text-textSecondary uppercase mb-2">
+                Total Analyses
+              </h3>
+              <p class="text-3xl font-bold text-primary" id="totalAnalyses">
+                -
+              </p>
+            </div>
+            <div class="bg-card rounded-xl shadow-sm border border-white/10 p-6">
+              <h3 class="text-sm font-medium text-textSecondary uppercase mb-2">
+                Average Score
+              </h3>
+              <p class="text-3xl font-bold text-primary" id="averageScore">
+                -
+              </p>
+            </div>
+            <div class="bg-card rounded-xl shadow-sm border border-white/10 p-6">
+              <h3 class="text-sm font-medium text-textSecondary uppercase mb-2">
+                Last Analysis
+              </h3>
+              <p class="text-sm text-textSecondary" id="lastAnalysis">-</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Help Page -->
+      <div id="page-help" class="page">
+        <div class="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
+          <div class="mb-6">
+            <h1 class="text-3xl font-bold text-textPrimary mb-2">
+              Help & Support
+            </h1>
+            <p class="text-textSecondary">Get answers to common questions</p>
+          </div>
+
+          <div class="bg-card rounded-xl shadow-sm border border-white/10 p-6 space-y-6">
+            <div>
+              <h2 class="text-xl font-semibold text-textPrimary mb-3">
+                How to Use ApplyMate
+              </h2>
+              <ol class="list-decimal list-inside space-y-2 text-textSecondary">
+                <li>Upload your resume in PDF format</li>
+                <li>Paste the complete job description</li>
+                <li>Click "Generate Results" to analyze your resume</li>
+                <li>
+                  Review your match score, cover letter, and interview
+                  questions
+                </li>
+                <li>Use the suggestions to improve your resume</li>
+              </ol>
+            </div>
+
+            <div>
+              <h2 class="text-xl font-semibold text-textPrimary mb-3">
+                Frequently Asked Questions
+              </h2>
+              <div class="space-y-4">
+                <div>
+                  <h3 class="font-semibold text-textPrimary mb-1">
+                    What file formats are supported?
+                  </h3>
+                  <p class="text-textSecondary">
+                    Currently, only PDF files are supported for resume
+                    uploads.
+                  </p>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-textPrimary mb-1">
+                    How accurate is the match score?
+                  </h3>
+                  <p class="text-textSecondary">
+                    The match score is calculated using AI analysis of skills,
+                    experience, and qualifications. It provides a good
+                    estimate but should be used as a guide.
+                  </p>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-textPrimary mb-1">
+                    Are my analyses saved?
+                  </h3>
+                  <p class="text-textSecondary">
+                    Yes, if you're signed in, all your analyses are saved and
+                    can be accessed from the "My Applications" page.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h2 class="text-xl font-semibold text-textPrimary mb-3">
+                Need More Help?
+              </h2>
+              <p class="text-textSecondary">
+                If you have additional questions or need support, please
+                contact us at support@applymate.com
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Login/Signup Modal -->
+  <div id="authModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-card rounded-xl shadow-xl border border-white/10 max-w-md w-full p-6 animate-fade-in">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-textPrimary" id="authModalTitle">
+          Login
+        </h2>
+        <button onclick="closeAuthModal()" class="text-textSecondary hover:text-textPrimary">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div id="authError" class="hidden bg-red-900/20 border border-red-500 rounded-lg p-3 mb-4">
+        <p class="text-sm text-red-300" id="authErrorMessage"></p>
+      </div>
+
+      <form id="authForm" onsubmit="handleAuth(event)" class="space-y-4">
+        <div>
+          <label for="authEmail" class="block text-sm font-medium text-textSecondary mb-1">Email</label>
+          <input type="email" id="authEmail" required
+            class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-textPrimary placeholder:text-textSecondary focus:ring-2 focus:ring-primary focus:border-primary outline-none" />
+        </div>
+        <div>
+          <label for="authPassword" class="block text-sm font-medium text-textSecondary mb-1">Password</label>
+          <input type="password" id="authPassword" required
+            class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-textPrimary placeholder:text-textSecondary focus:ring-2 focus:ring-primary focus:border-primary outline-none" />
+        </div>
+        <button type="submit" id="authSubmit"
+          class="w-full px-4 py-2.5 bg-primary text-gray-900 font-medium rounded-lg hover:opacity-90 transition-smooth">
+          Login
+        </button>
+      </form>
+
+      <div class="mt-4 text-center">
+        <button onclick="toggleAuthMode()" class="text-sm text-primary hover:underline" id="authToggle">
+          Don't have an account? Sign up
+        </button>
+      </div>
     </div>
+  </div>
 
-    <!-- Firebase Config Script -->
-    <script src="/firebase-config.js"></script>
+  <!-- Firebase Config Script -->
+  <script src="/firebase-config.js"></script>
 
-    <!-- Main Application Script -->
-    <script>
-      /**
-       * ApplyMate SaaS Frontend with Authentication
-       * Features: Firebase Auth, Routing, Protected Navigation
-       */
+  <!-- Main Application Script -->
+  <script>
+    /**
+     * ApplyMate SaaS Frontend with Authentication
+     * Features: Firebase Auth, Routing, Protected Navigation
+     */
 
-      // Firebase initialization
-      let auth = null;
-      let currentUser = null;
-      let authMode = "login"; // 'login' or 'signup'
-      let currentStep = 1;
-      let analysisData = null;
-      let idToken = null;
+    // Firebase initialization
+    let auth = null;
+    let currentUser = null;
+    let authMode = "login"; // 'login' or 'signup'
+    let currentStep = 1;
+    let analysisData = null;
+    let idToken = null;
 
-      // Initialize Firebase
-      try {
-        if (firebaseConfig && firebaseConfig.apiKey !== "YOUR_API_KEY") {
-          firebase.initializeApp(firebaseConfig);
-          auth = firebase.auth();
+    // Initialize Firebase
+    try {
+      if (firebaseConfig && firebaseConfig.apiKey !== "YOUR_API_KEY") {
+        firebase.initializeApp(firebaseConfig);
+        auth = firebase.auth();
 
-          // Wait for Firebase Auth to resolve and token before fetching
-          auth.onAuthStateChanged(async (user) => {
-            currentUser = user;
-            if (user) {
-              try {
-                idToken = await user.getIdToken();
-              } catch (e) {
-                idToken = null;
-              }
-            } else {
+        // Wait for Firebase Auth to resolve and token before fetching
+        auth.onAuthStateChanged(async (user) => {
+          currentUser = user;
+          if (user) {
+            try {
+              idToken = await user.getIdToken();
+            } catch (e) {
               idToken = null;
             }
-            updateAuthUI();
-            // Triggers dashboard/applications only after token is ready
-            if (user && idToken) {
-              if (document.getElementById("page-dashboard")?.classList.contains("active")) {
-                await loadDashboard();
-              }
-              if (document.getElementById("page-applications")?.classList.contains("active")) {
-                await loadApplications();
-              }
-            }
-          });
-        } else {
-          console.warn(
-            "Firebase not configured. Please update firebase-config.js"
-          );
-        }
-      } catch (error) {
-        console.error("Firebase initialization error:", error);
-      }
-
-      // Navigation
-      function navigateTo(page) {
-        // Hide all pages
-        document
-          .querySelectorAll(".page")
-          .forEach((p) => p.classList.remove("active"));
-
-        // Show selected page
-        document.getElementById(`page-${page}`).classList.add("active");
-
-        // Update navigation highlighting
-        document.querySelectorAll(".nav-link").forEach((link) => {
-          link.classList.remove("text-primary", "bg-blue-50");
-          link.classList.add("text-gray-700");
-        });
-
-        if (page === "home") {
-          const hero = document.getElementById("landingHero");
-          const workflow = document.getElementById("workflowContent");
-          if (hero) hero.classList.remove("hidden");
-          if (workflow) workflow.classList.add("hidden");
-        }
-
-        // Load page-specific content
-        if (page === "applications" && currentUser) {
-          loadApplications();
-        } else if (page === "dashboard" && currentUser) {
-          loadDashboard();
-        }
-
-        // Close sidebar on mobile
-        if (window.innerWidth < 768) {
-          const sidebar = document.getElementById("sidebar");
-          const overlay = document.getElementById("sidebarOverlay");
-          sidebar.classList.add("-translate-x-full");
-          overlay.classList.add("hidden");
-        }
-      }
-
-      // Auth Functions
-      function showLoginModal() {
-        authMode = "login";
-        document.getElementById("authModalTitle").textContent = "Login";
-        document.getElementById("authSubmit").textContent = "Login";
-        document.getElementById("authToggle").textContent =
-          "Don't have an account? Sign up";
-        document.getElementById("authModal").classList.remove("hidden");
-        document.getElementById("authError").classList.add("hidden");
-      }
-
-      function closeAuthModal() {
-        document.getElementById("authModal").classList.add("hidden");
-        document.getElementById("authForm").reset();
-      }
-
-      function toggleAuthMode() {
-        authMode = authMode === "login" ? "signup" : "login";
-        document.getElementById("authModalTitle").textContent =
-          authMode === "login" ? "Login" : "Sign Up";
-        document.getElementById("authSubmit").textContent =
-          authMode === "login" ? "Login" : "Sign Up";
-        document.getElementById("authToggle").textContent =
-          authMode === "login"
-            ? "Don't have an account? Sign up"
-            : "Already have an account? Login";
-        document.getElementById("authError").classList.add("hidden");
-      }
-
-      async function handleAuth(event) {
-        event.preventDefault();
-        if (!auth) {
-          showAuthError(
-            "Firebase not configured. Please update firebase-config.js"
-          );
-          return;
-        }
-
-        const email = document.getElementById("authEmail").value;
-        const password = document.getElementById("authPassword").value;
-        const errorDiv = document.getElementById("authError");
-        const errorMsg = document.getElementById("authErrorMessage");
-
-        try {
-          if (authMode === "login") {
-            await auth.signInWithEmailAndPassword(email, password);
           } else {
-            await auth.createUserWithEmailAndPassword(email, password);
+            idToken = null;
           }
-          closeAuthModal();
-        } catch (error) {
-          showAuthError(error.message);
-        }
+          updateAuthUI();
+          // Triggers dashboard/applications only after token is ready
+          if (user && idToken) {
+            if (document.getElementById("page-dashboard")?.classList.contains("active")) {
+              await loadDashboard();
+            }
+            if (document.getElementById("page-applications")?.classList.contains("active")) {
+              await loadApplications();
+            }
+          }
+        });
+      } else {
+        console.warn(
+          "Firebase not configured. Please update firebase-config.js"
+        );
       }
+    } catch (error) {
+      console.error("Firebase initialization error:", error);
+    }
 
-      function showAuthError(message) {
-        const errorDiv = document.getElementById("authError");
-        const errorMsg = document.getElementById("authErrorMessage");
-        errorMsg.textContent = message;
-        errorDiv.classList.remove("hidden");
-      }
-
-      async function handleLogout() {
-        if (auth) {
-          await auth.signOut();
-          navigateTo("home");
-        }
-        document.getElementById("userMenu").classList.add("hidden");
-      }
-
-      function toggleUserMenu() {
-        document.getElementById("userMenu").classList.toggle("hidden");
-      }
-
-      function updateAuthUI() {
-        const signedIn = document.getElementById("authSignedIn");
-        const notSignedIn = document.getElementById("authNotSignedIn");
-        const navApplications = document.getElementById("navApplications");
-        const navDashboard = document.getElementById("navDashboard");
-
-        if (currentUser) {
-          signedIn.classList.remove("hidden");
-          notSignedIn.classList.add("hidden");
-          document.getElementById("userEmail").textContent = currentUser.email;
-          document.getElementById("userInitial").textContent = currentUser.email
-            .charAt(0)
-            .toUpperCase();
-          navApplications.classList.remove("opacity-50", "cursor-not-allowed");
-          navDashboard.classList.remove("opacity-50", "cursor-not-allowed");
-        } else {
-          signedIn.classList.add("hidden");
-          notSignedIn.classList.remove("hidden");
-          navApplications.classList.add("opacity-50", "cursor-not-allowed");
-          navDashboard.classList.add("opacity-50", "cursor-not-allowed");
-        }
-      }
-
-      // Sidebar
-      function toggleSidebar() {
-        const sidebar = document.getElementById("sidebar");
-        const overlay = document.getElementById("sidebarOverlay");
-        if (window.innerWidth < 768) {
-          sidebar.classList.toggle("-translate-x-full");
-          overlay.classList.toggle("hidden");
-        } else {
-          // Ensure desktop/tablet layout shows sidebar without overlay
-          sidebar.classList.remove("-translate-x-full");
-          overlay.classList.add("hidden");
-        }
-      }
+    // Navigation
+    function navigateTo(page) {
+      // Hide all pages
       document
-        .getElementById("sidebarToggle")
-        .addEventListener("click", toggleSidebar);
+        .querySelectorAll(".page")
+        .forEach((p) => p.classList.remove("active"));
 
-      // Workflow Functions
-      function startAnalysis() {
+      // Show selected page
+      document.getElementById(`page-${page}`).classList.add("active");
+
+      // Update navigation highlighting
+      document.querySelectorAll(".nav-link").forEach((link) => {
+        link.classList.remove("text-primary", "bg-blue-50");
+        link.classList.add("text-gray-700");
+      });
+
+      if (page === "home") {
         const hero = document.getElementById("landingHero");
         const workflow = document.getElementById("workflowContent");
-        if (hero) hero.classList.add("hidden");
-        if (workflow) workflow.classList.remove("hidden");
-        goToStep(1);
-        setTimeout(() => {
-          document
-            .getElementById("step1")
-            .scrollIntoView({ behavior: "smooth", block: "start" });
-        }, 100);
+        if (hero) hero.classList.remove("hidden");
+        if (workflow) workflow.classList.add("hidden");
       }
-      function goToStep(step) {
+
+      // Load page-specific content
+      if (page === "applications" && currentUser) {
+        loadApplications();
+      } else if (page === "dashboard" && currentUser) {
+        loadDashboard();
+      }
+
+      // Close sidebar on mobile
+      if (window.innerWidth < 768) {
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("sidebarOverlay");
+        sidebar.classList.add("-translate-x-full");
+        overlay.classList.add("hidden");
+      }
+    }
+
+    // Auth Functions
+    function showLoginModal() {
+      authMode = "login";
+      document.getElementById("authModalTitle").textContent = "Login";
+      document.getElementById("authSubmit").textContent = "Login";
+      document.getElementById("authToggle").textContent =
+        "Don't have an account? Sign up";
+      document.getElementById("authModal").classList.remove("hidden");
+      document.getElementById("authError").classList.add("hidden");
+    }
+
+    function closeAuthModal() {
+      document.getElementById("authModal").classList.add("hidden");
+      document.getElementById("authForm").reset();
+    }
+
+    function toggleAuthMode() {
+      authMode = authMode === "login" ? "signup" : "login";
+      document.getElementById("authModalTitle").textContent =
+        authMode === "login" ? "Login" : "Sign Up";
+      document.getElementById("authSubmit").textContent =
+        authMode === "login" ? "Login" : "Sign Up";
+      document.getElementById("authToggle").textContent =
+        authMode === "login"
+          ? "Don't have an account? Sign up"
+          : "Already have an account? Login";
+      document.getElementById("authError").classList.add("hidden");
+    }
+
+    async function handleAuth(event) {
+      event.preventDefault();
+      if (!auth) {
+        showAuthError(
+          "Firebase not configured. Please update firebase-config.js"
+        );
+        return;
+      }
+
+      const email = document.getElementById("authEmail").value;
+      const password = document.getElementById("authPassword").value;
+      const errorDiv = document.getElementById("authError");
+      const errorMsg = document.getElementById("authErrorMessage");
+
+      try {
+        if (authMode === "login") {
+          await auth.signInWithEmailAndPassword(email, password);
+        } else {
+          await auth.createUserWithEmailAndPassword(email, password);
+        }
+        closeAuthModal();
+      } catch (error) {
+        showAuthError(error.message);
+      }
+    }
+
+    function showAuthError(message) {
+      const errorDiv = document.getElementById("authError");
+      const errorMsg = document.getElementById("authErrorMessage");
+      errorMsg.textContent = message;
+      errorDiv.classList.remove("hidden");
+    }
+
+    async function handleLogout() {
+      if (auth) {
+        await auth.signOut();
+        navigateTo("home");
+      }
+      document.getElementById("userMenu").classList.add("hidden");
+    }
+
+    function toggleUserMenu() {
+      document.getElementById("userMenu").classList.toggle("hidden");
+    }
+
+    function updateAuthUI() {
+      const signedIn = document.getElementById("authSignedIn");
+      const notSignedIn = document.getElementById("authNotSignedIn");
+      const navApplications = document.getElementById("navApplications");
+      const navDashboard = document.getElementById("navDashboard");
+
+      if (currentUser) {
+        signedIn.classList.remove("hidden");
+        notSignedIn.classList.add("hidden");
+        document.getElementById("userEmail").textContent = currentUser.email;
+        document.getElementById("userInitial").textContent = currentUser.email
+          .charAt(0)
+          .toUpperCase();
+        navApplications.classList.remove("opacity-50", "cursor-not-allowed");
+        navDashboard.classList.remove("opacity-50", "cursor-not-allowed");
+      } else {
+        signedIn.classList.add("hidden");
+        notSignedIn.classList.remove("hidden");
+        navApplications.classList.add("opacity-50", "cursor-not-allowed");
+        navDashboard.classList.add("opacity-50", "cursor-not-allowed");
+      }
+    }
+
+    // Sidebar
+    function toggleSidebar() {
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("sidebarOverlay");
+      if (window.innerWidth < 768) {
+        sidebar.classList.toggle("-translate-x-full");
+        overlay.classList.toggle("hidden");
+      } else {
+        // Ensure desktop/tablet layout shows sidebar without overlay
+        sidebar.classList.remove("-translate-x-full");
+        overlay.classList.add("hidden");
+      }
+    }
+    document
+      .getElementById("sidebarToggle")
+      .addEventListener("click", toggleSidebar);
+
+    // Workflow Functions
+    function startAnalysis() {
+      const hero = document.getElementById("landingHero");
+      const workflow = document.getElementById("workflowContent");
+      if (hero) hero.classList.add("hidden");
+      if (workflow) workflow.classList.remove("hidden");
+      goToStep(1);
+      setTimeout(() => {
         document
-          .querySelectorAll(".step-content")
-          .forEach((el) => el.classList.add("hidden"));
-        document.getElementById(`step${step}`).classList.remove("hidden");
-        currentStep = step;
-      }
+          .getElementById("step1")
+          .scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
+    }
+    function goToStep(step) {
+      document
+        .querySelectorAll(".step-content")
+        .forEach((el) => el.classList.add("hidden"));
+      document.getElementById(`step${step}`).classList.remove("hidden");
+      currentStep = step;
+    }
 
-      function handleFileSelect(event) {
-        const file = event.target.files[0];
-        const step1Next = document.getElementById("step1Next");
-        const dropZone = document.getElementById("fileDropZone");
+    function handleFileSelect(event) {
+      const file = event.target.files[0];
+      const step1Next = document.getElementById("step1Next");
+      const dropZone = document.getElementById("fileDropZone");
 
-        if (file) {
-          const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
-          document.getElementById("fileInfo").innerHTML = `
+      if (file) {
+        const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+        document.getElementById("fileInfo").innerHTML = `
                     <div class="flex items-center space-x-2 text-green-600">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
@@ -1600,490 +1145,735 @@
                         <span class="text-gray-500">(${fileSizeMB} MB)</span>
                     </div>
                 `;
-          step1Next.disabled = false;
-          dropZone.classList.add("border-green-500", "bg-green-50");
-        } else {
-          document.getElementById("fileInfo").textContent = "";
-          step1Next.disabled = true;
-          dropZone.classList.remove("border-green-500", "bg-green-50");
-        }
+        step1Next.disabled = false;
+        dropZone.classList.add("border-green-500", "bg-green-50");
+      } else {
+        document.getElementById("fileInfo").textContent = "";
+        step1Next.disabled = true;
+        dropZone.classList.remove("border-green-500", "bg-green-50");
+      }
+    }
+
+    function handleJobDescInput(event) {
+      document.getElementById("step2Next").disabled =
+        event.target.value.trim().length === 0;
+    }
+
+    async function generateResults() {
+      const fileInput = document.getElementById("resume");
+      const jobDescInput = document.getElementById("jobDescription");
+
+      if (!fileInput.files[0]) {
+        showError("Please upload a resume file");
+        goToStep(1);
+        return;
       }
 
-      function handleJobDescInput(event) {
-        document.getElementById("step2Next").disabled =
-          event.target.value.trim().length === 0;
+      if (!jobDescInput.value.trim()) {
+        showError("Please enter a job description");
+        goToStep(2);
+        return;
       }
 
-      async function generateResults() {
-        const fileInput = document.getElementById("resume");
-        const jobDescInput = document.getElementById("jobDescription");
+      hideError();
+      document.getElementById("loading").classList.remove("hidden");
+      document.getElementById("generateText").classList.add("hidden");
+      document.getElementById("generateLoading").classList.remove("hidden");
+      document.getElementById("generateBtn").disabled = true;
+      document.getElementById("step3").classList.add("hidden");
 
-        if (!fileInput.files[0]) {
-          showError("Please upload a resume file");
-          goToStep(1);
-          return;
+      const formData = new FormData();
+      formData.append("resume", fileInput.files[0]);
+      formData.append("jobDescription", jobDescInput.value);
+
+      try {
+        const headers = {};
+        if (idToken) {
+          headers["Authorization"] = `Bearer ${idToken}`;
         }
 
-        if (!jobDescInput.value.trim()) {
-          showError("Please enter a job description");
-          goToStep(2);
-          return;
-        }
-
-        hideError();
-        document.getElementById("loading").classList.remove("hidden");
-        document.getElementById("generateText").classList.add("hidden");
-        document.getElementById("generateLoading").classList.remove("hidden");
-        document.getElementById("generateBtn").disabled = true;
-        document.getElementById("step3").classList.add("hidden");
-
-        const formData = new FormData();
-        formData.append("resume", fileInput.files[0]);
-        formData.append("jobDescription", jobDescInput.value);
-
-        try {
-          const headers = {};
-          if (idToken) {
-            headers["Authorization"] = `Bearer ${idToken}`;
-          }
-
-          const response = await fetch("/api/analyze", {
-            method: "POST",
-            headers: headers,
-            body: formData,
-          });
-
-          const data = await response.json();
-
-          if (!response.ok) {
-            throw new Error(
-              data.message || data.error || "Failed to analyze resume"
-            );
-          }
-
-          analysisData = data.analysis;
-          displayResults(data.analysis);
-          goToStep(4);
-        } catch (error) {
-          showError(error.message || "An error occurred. Please try again.");
-          document.getElementById("step3").classList.remove("hidden");
-        } finally {
-          document.getElementById("loading").classList.add("hidden");
-          document.getElementById("generateText").classList.remove("hidden");
-          document.getElementById("generateLoading").classList.add("hidden");
-          document.getElementById("generateBtn").disabled = false;
-        }
-      }
-
-      function displayResults(analysis) {
-        const score = analysis.matchScore || 0;
-        document.getElementById("scoreValue").textContent = score;
-
-        let progressColor;
-        if (score >= 75) {
-          progressColor = "linear-gradient(90deg, #10b981 0%, #059669 100%)";
-        } else if (score >= 60) {
-          progressColor = "linear-gradient(90deg, #f59e0b 0%, #d97706 100%)";
-        } else if (score >= 40) {
-          progressColor = "linear-gradient(90deg, #f97316 0%, #ea580c 100%)";
-        } else {
-          progressColor = "linear-gradient(90deg, #ef4444 0%, #dc2626 100%)";
-        }
-
-        const progressBar = document.getElementById("progressBar");
-        progressBar.style.background = progressColor;
-        progressBar.style.width = "0%";
-
-        setTimeout(() => {
-          progressBar.style.width = `${score}%`;
-          document.getElementById("progressText").textContent = `${score}%`;
-        }, 100);
-
-        const explanationDiv = document.getElementById("scoreExplanation");
-        explanationDiv.innerHTML = "";
-        if (analysis.scoreExplanation && analysis.scoreExplanation.length > 0) {
-          analysis.scoreExplanation.forEach((explanation) => {
-            const p = document.createElement("p");
-            p.className = "text-gray-600 text-sm flex items-start";
-            p.innerHTML = `<span class="text-primary mr-2">•</span><span>${explanation}</span>`;
-            explanationDiv.appendChild(p);
-          });
-        }
-
-        // Skills
-        const missingSkills = analysis.missingSkills || [];
-        const jobDesc = document.getElementById("jobDescription").value;
-        const commonSkills = [
-          "JavaScript",
-          "Python",
-          "Java",
-          "React",
-          "Node.js",
-          "TypeScript",
-          "SQL",
-          "MongoDB",
-          "AWS",
-          "Docker",
-          "Git",
-          "Agile",
-        ];
-        const matchingSkillsDiv = document.getElementById("matchingSkills");
-        matchingSkillsDiv.innerHTML = "";
-
-        const jobDescLower = jobDesc.toLowerCase();
-        const matchingSkills = commonSkills.filter((skill) => {
-          const skillLower = skill.toLowerCase();
-          return (
-            jobDescLower.includes(skillLower) &&
-            !missingSkills.some((missing) =>
-              missing.toLowerCase().includes(skillLower)
-            )
-          );
+        const response = await fetch("/api/analyze", {
+          method: "POST",
+          headers: headers,
+          body: formData,
         });
 
-        if (matchingSkills.length > 0) {
-          matchingSkills.forEach((skill) => {
-            const badge = document.createElement("span");
-            badge.className =
-              "px-3 py-1.5 bg-green-100 text-green-800 rounded-full text-sm font-medium hover:bg-green-200 transition-smooth cursor-default";
-            badge.textContent = skill;
-            matchingSkillsDiv.appendChild(badge);
-          });
-        } else if (missingSkills.length === 0) {
-          matchingSkillsDiv.innerHTML =
-            '<span class="text-green-600 font-medium">All required skills are present!</span>';
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            data.message || data.error || "Failed to analyze resume"
+          );
         }
 
-        const missingSkillsDiv = document.getElementById("missingSkills");
-        missingSkillsDiv.innerHTML = "";
-        if (missingSkills.length > 0) {
-          missingSkills.forEach((skill) => {
-            const badge = document.createElement("span");
-            badge.className =
-              "px-3 py-1.5 bg-red-100 text-red-800 rounded-full text-sm font-medium hover:bg-red-200 transition-smooth cursor-default";
-            badge.textContent = skill;
-            missingSkillsDiv.appendChild(badge);
-          });
-        } else {
-          missingSkillsDiv.innerHTML =
-            '<span class="text-green-600 font-medium">No missing skills identified!</span>';
-        }
+        analysisData = data.analysis;
+        displayResults(data.analysis);
+        goToStep(4);
+      } catch (error) {
+        showError(error.message || "An error occurred. Please try again.");
+        document.getElementById("step3").classList.remove("hidden");
+      } finally {
+        document.getElementById("loading").classList.add("hidden");
+        document.getElementById("generateText").classList.remove("hidden");
+        document.getElementById("generateLoading").classList.add("hidden");
+        document.getElementById("generateBtn").disabled = false;
+      }
+    }
 
-        // Resume Improvements
-        const improvementsList = document.getElementById("resumeImprovements");
-        improvementsList.innerHTML = "";
-        if (
-          analysis.resumeImprovements &&
-          analysis.resumeImprovements.length > 0
-        ) {
-          analysis.resumeImprovements.forEach((improvement, index) => {
-            const li = document.createElement("li");
-            li.className =
-              "flex items-start p-4 bg-yellow-50 border border-yellow-200 rounded-lg";
-            li.innerHTML = `
-                        <span class="flex-shrink-0 w-6 h-6 bg-yellow-500 text-white rounded-full flex items-center justify-center font-bold mr-3 mt-0.5 text-xs">${
-                          index + 1
-                        }</span>
+    function displayResults(analysis) {
+      const score = analysis.matchScore || 0;
+      document.getElementById("scoreValue").textContent = score;
+
+      let progressColor;
+      if (score >= 75) {
+        progressColor = "linear-gradient(90deg, #10b981 0%, #059669 100%)";
+      } else if (score >= 60) {
+        progressColor = "linear-gradient(90deg, #f59e0b 0%, #d97706 100%)";
+      } else if (score >= 40) {
+        progressColor = "linear-gradient(90deg, #f97316 0%, #ea580c 100%)";
+      } else {
+        progressColor = "linear-gradient(90deg, #ef4444 0%, #dc2626 100%)";
+      }
+
+      const progressBar = document.getElementById("progressBar");
+      progressBar.style.background = progressColor;
+      progressBar.style.width = "0%";
+
+      setTimeout(() => {
+        progressBar.style.width = `${score}%`;
+        document.getElementById("progressText").textContent = `${score}%`;
+      }, 100);
+
+      const explanationDiv = document.getElementById("scoreExplanation");
+      explanationDiv.innerHTML = "";
+      if (analysis.scoreExplanation && analysis.scoreExplanation.length > 0) {
+        analysis.scoreExplanation.forEach((explanation) => {
+          const p = document.createElement("p");
+          p.className = "text-gray-600 text-sm flex items-start";
+          p.innerHTML = `<span class="text-primary mr-2">•</span><span>${explanation}</span>`;
+          explanationDiv.appendChild(p);
+        });
+      }
+
+      // Skills
+      const missingSkills = analysis.missingSkills || [];
+      const jobDesc = document.getElementById("jobDescription").value;
+      const commonSkills = [
+        "JavaScript",
+        "Python",
+        "Java",
+        "React",
+        "Node.js",
+        "TypeScript",
+        "SQL",
+        "MongoDB",
+        "AWS",
+        "Docker",
+        "Git",
+        "Agile",
+      ];
+      const matchingSkillsDiv = document.getElementById("matchingSkills");
+      matchingSkillsDiv.innerHTML = "";
+
+      const jobDescLower = jobDesc.toLowerCase();
+      const matchingSkills = commonSkills.filter((skill) => {
+        const skillLower = skill.toLowerCase();
+        return (
+          jobDescLower.includes(skillLower) &&
+          !missingSkills.some((missing) =>
+            missing.toLowerCase().includes(skillLower)
+          )
+        );
+      });
+
+      if (matchingSkills.length > 0) {
+        matchingSkills.forEach((skill) => {
+          const badge = document.createElement("span");
+          badge.className =
+            "px-3 py-1.5 bg-green-100 text-green-800 rounded-full text-sm font-medium hover:bg-green-200 transition-smooth cursor-default";
+          badge.textContent = skill;
+          matchingSkillsDiv.appendChild(badge);
+        });
+      } else if (missingSkills.length === 0) {
+        matchingSkillsDiv.innerHTML =
+          '<span class="text-green-600 font-medium">All required skills are present!</span>';
+      }
+
+      const missingSkillsDiv = document.getElementById("missingSkills");
+      missingSkillsDiv.innerHTML = "";
+      if (missingSkills.length > 0) {
+        missingSkills.forEach((skill) => {
+          const badge = document.createElement("span");
+          badge.className =
+            "px-3 py-1.5 bg-red-100 text-red-800 rounded-full text-sm font-medium hover:bg-red-200 transition-smooth cursor-default";
+          badge.textContent = skill;
+          missingSkillsDiv.appendChild(badge);
+        });
+      } else {
+        missingSkillsDiv.innerHTML =
+          '<span class="text-green-600 font-medium">No missing skills identified!</span>';
+      }
+
+      // Resume Improvements
+      const improvementsList = document.getElementById("resumeImprovements");
+      improvementsList.innerHTML = "";
+      if (
+        analysis.resumeImprovements &&
+        analysis.resumeImprovements.length > 0
+      ) {
+        analysis.resumeImprovements.forEach((improvement, index) => {
+          const li = document.createElement("li");
+          li.className =
+            "flex items-start p-4 bg-yellow-50 border border-yellow-200 rounded-lg";
+          li.innerHTML = `
+                        <span class="flex-shrink-0 w-6 h-6 bg-yellow-500 text-white rounded-full flex items-center justify-center font-bold mr-3 mt-0.5 text-xs">${index + 1
+            }</span>
                         <span class="text-gray-800">${improvement}</span>
                     `;
-            improvementsList.appendChild(li);
-          });
-        }
+          improvementsList.appendChild(li);
+        });
+      }
 
-        document.getElementById("coverLetter").textContent =
-          analysis.coverLetter || "No cover letter generated.";
+      document.getElementById("coverLetter").textContent =
+        analysis.coverLetter || "No cover letter generated.";
 
-        const questionsList = document.getElementById("interviewQuestions");
-        questionsList.innerHTML = "";
-        if (
-          analysis.interviewQuestions &&
-          analysis.interviewQuestions.length > 0
-        ) {
-          analysis.interviewQuestions.forEach((question, index) => {
-            const li = document.createElement("li");
-            li.className =
-              "flex items-start p-4 bg-gray-50 border-l-4 border-primary rounded-lg";
-            li.innerHTML = `
-                        <span class="flex-shrink-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold mr-4 mt-0.5">${
-                          index + 1
-                        }</span>
+      const questionsList = document.getElementById("interviewQuestions");
+      questionsList.innerHTML = "";
+      if (
+        analysis.interviewQuestions &&
+        analysis.interviewQuestions.length > 0
+      ) {
+        analysis.interviewQuestions.forEach((question, index) => {
+          const li = document.createElement("li");
+          li.className =
+            "flex items-start p-4 bg-gray-50 border-l-4 border-primary rounded-lg";
+          li.innerHTML = `
+                        <span class="flex-shrink-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold mr-4 mt-0.5">${index + 1
+            }</span>
                         <span class="text-gray-800 leading-relaxed">${question}</span>
                     `;
-            questionsList.appendChild(li);
-          });
-        }
-
-        setTimeout(() => {
-          document
-            .getElementById("step4")
-            .scrollIntoView({ behavior: "smooth", block: "nearest" });
-        }, 100);
+          questionsList.appendChild(li);
+        });
       }
 
-      function toggleCollapsible(contentId) {
-        const content = document.getElementById(contentId);
-        const iconId = contentId.replace("Content", "Icon");
-        const icon = document.getElementById(iconId);
+      setTimeout(() => {
+        document
+          .getElementById("step4")
+          .scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }, 100);
+    }
 
-        if (content.classList.contains("expanded")) {
-          content.classList.remove("expanded");
-          if (icon) icon.style.transform = "rotate(0deg)";
-        } else {
-          content.classList.add("expanded");
-          if (icon) icon.style.transform = "rotate(180deg)";
-        }
+    function toggleCollapsible(contentId) {
+      const content = document.getElementById(contentId);
+      const iconId = contentId.replace("Content", "Icon");
+      const icon = document.getElementById(iconId);
+
+      if (content.classList.contains("expanded")) {
+        content.classList.remove("expanded");
+        if (icon) icon.style.transform = "rotate(0deg)";
+      } else {
+        content.classList.add("expanded");
+        if (icon) icon.style.transform = "rotate(180deg)";
       }
+    }
 
-      function copyToClipboard(elementId, label) {
-        const element = document.getElementById(elementId);
-        const text = element.textContent;
+    function copyToClipboard(elementId, label) {
+      const element = document.getElementById(elementId);
+      const text = element.textContent;
 
-        navigator.clipboard
-          .writeText(text)
-          .then(() => {
-            const button = event.target.closest("button");
-            const originalHTML = button.innerHTML;
-            button.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Copied!</span>`;
-            button.classList.add("bg-green-600", "hover:bg-green-700");
-            setTimeout(() => {
-              button.innerHTML = originalHTML;
-              button.classList.remove("bg-green-600", "hover:bg-green-700");
-            }, 2000);
-          })
-          .catch((err) => {
-            console.error("Failed to copy:", err);
-            alert("Failed to copy to clipboard");
-          });
-      }
-
-      function copyAllQuestions() {
-        if (!analysisData || !analysisData.interviewQuestions) return;
-
-        const questionsText = analysisData.interviewQuestions
-          .map((q, i) => `${i + 1}. ${q}`)
-          .join("\n\n");
-
-        navigator.clipboard.writeText(questionsText).then(() => {
+      navigator.clipboard
+        .writeText(text)
+        .then(() => {
           const button = event.target.closest("button");
           const originalHTML = button.innerHTML;
-          button.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Copied All!</span>`;
+          button.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Copied!</span>`;
           button.classList.add("bg-green-600", "hover:bg-green-700");
           setTimeout(() => {
             button.innerHTML = originalHTML;
             button.classList.remove("bg-green-600", "hover:bg-green-700");
           }, 2000);
+        })
+        .catch((err) => {
+          console.error("Failed to copy:", err);
+          alert("Failed to copy to clipboard");
         });
-      }
+    }
 
-      function resetApplication() {
-        if (
-          confirm(
-            "Are you sure you want to start over? This will clear all your data."
-          )
-        ) {
-          document.getElementById("resume").value = "";
-          document.getElementById("jobDescription").value = "";
-          document.getElementById("fileInfo").textContent = "";
-          analysisData = null;
-          hideError();
-          goToStep(1);
-        }
-      }
+    function copyAllQuestions() {
+      if (!analysisData || !analysisData.interviewQuestions) return;
 
-      function showError(message) {
-        const errorDiv = document.getElementById("error");
-        const errorMessage = document.getElementById("errorMessage");
-        errorMessage.textContent = message;
-        errorDiv.classList.remove("hidden");
-        errorDiv.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      }
+      const questionsText = analysisData.interviewQuestions
+        .map((q, i) => `${i + 1}. ${q}`)
+        .join("\n\n");
 
-      function hideError() {
-        document.getElementById("error").classList.add("hidden");
-      }
+      navigator.clipboard.writeText(questionsText).then(() => {
+        const button = event.target.closest("button");
+        const originalHTML = button.innerHTML;
+        button.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Copied All!</span>`;
+        button.classList.add("bg-green-600", "hover:bg-green-700");
+        setTimeout(() => {
+          button.innerHTML = originalHTML;
+          button.classList.remove("bg-green-600", "hover:bg-green-700");
+        }, 2000);
+      });
+    }
 
-      function hideProTip() {
-        document.getElementById("proTip").classList.add("hidden");
+    function resetApplication() {
+      if (
+        confirm(
+          "Are you sure you want to start over? This will clear all your data."
+        )
+      ) {
+        document.getElementById("resume").value = "";
+        document.getElementById("jobDescription").value = "";
+        document.getElementById("fileInfo").textContent = "";
+        analysisData = null;
+        hideError();
+        goToStep(1);
       }
+    }
 
-      // My Applications Page
-      async function loadApplications() {
-        if (!currentUser || !idToken) {
-          document.getElementById("applicationsContent").innerHTML = `
+    function showError(message) {
+      const errorDiv = document.getElementById("error");
+      const errorMessage = document.getElementById("errorMessage");
+      errorMessage.textContent = message;
+      errorDiv.classList.remove("hidden");
+      errorDiv.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+
+    function hideError() {
+      document.getElementById("error").classList.add("hidden");
+    }
+
+    function hideProTip() {
+      document.getElementById("proTip").classList.add("hidden");
+    }
+
+    // My Applications Page
+    async function loadApplications() {
+      if (!currentUser || !idToken) {
+        document.getElementById("applicationsContent").innerHTML = `
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
                         <p class="text-gray-500 mb-4">Please sign in to view your applications.</p>
                         <button onclick="showLoginModal()" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-secondary">Sign In</button>
                     </div>
                 `;
-          return;
+        return;
+      }
+
+      try {
+        const response = await fetch("/api/analyses", {
+          headers: {
+            Authorization: `Bearer ${idToken}`,
+          },
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Failed to load applications");
         }
 
-        try {
-          const response = await fetch("/api/analyses", {
-            headers: {
-              Authorization: `Bearer ${idToken}`,
-            },
-          });
+        const applicationsDiv = document.getElementById(
+          "applicationsContent"
+        );
 
-          const data = await response.json();
-
-          if (!response.ok) {
-            throw new Error(data.error || "Failed to load applications");
-          }
-
-          const applicationsDiv = document.getElementById(
-            "applicationsContent"
-          );
-
-          if (data.analyses && data.analyses.length > 0) {
-            applicationsDiv.innerHTML = data.analyses
-              .map((analysis) => {
-                const date = analysis.createdAt
-                  ? new Date(analysis.createdAt).toLocaleDateString()
-                  : "Unknown date";
-                return `
+        if (data.analyses && data.analyses.length > 0) {
+          applicationsDiv.innerHTML = data.analyses
+            .map((analysis) => {
+              const date = analysis.createdAt
+                ? new Date(analysis.createdAt).toLocaleDateString()
+                : "Unknown date";
+              return `
                             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                                 <div class="flex items-center justify-between mb-4">
                                     <div>
                                         <h3 class="text-lg font-semibold text-gray-900">Analysis from ${date}</h3>
-                                        <p class="text-sm text-gray-500">Match Score: ${
-                                          analysis.matchScore || "N/A"
-                                        }/100</p>
+                                        <p class="text-sm text-gray-500">Match Score: ${analysis.matchScore || "N/A"
+                }/100</p>
                                     </div>
-                                    <span class="px-3 py-1 bg-primary text-white rounded-full text-sm font-medium">${
-                                      analysis.matchScore || 0
-                                    }%</span>
+                                    <span class="px-3 py-1 bg-primary text-white rounded-full text-sm font-medium">${analysis.matchScore || 0
+                }%</span>
                                 </div>
                                 <div class="text-sm text-gray-600 mb-4">
                                     <p class="mb-2"><strong>Job Description:</strong> ${(
-                                      analysis.jobDescription || ""
-                                    ).substring(0, 100)}...</p>
+                  analysis.jobDescription || ""
+                ).substring(0, 100)}...</p>
                                 </div>
-                                <button onclick="viewAnalysis('${
-                                  analysis.id
-                                }')" class="text-primary hover:underline text-sm font-medium">View Details →</button>
+                                <button onclick="viewAnalysis('${analysis.id
+                }')" class="text-primary hover:underline text-sm font-medium">View Details →</button>
                             </div>
                         `;
-              })
-              .join("");
-          } else {
-            applicationsDiv.innerHTML = `
+            })
+            .join("");
+        } else {
+          applicationsDiv.innerHTML = `
                         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
                             <p class="text-gray-500">No applications found. Generate your first analysis to get started!</p>
                         </div>
                     `;
-          }
-        } catch (error) {
-          document.getElementById("applicationsContent").innerHTML = `
+        }
+      } catch (error) {
+        document.getElementById("applicationsContent").innerHTML = `
                     <div class="bg-red-50 border border-red-200 rounded-lg p-4">
                         <p class="text-red-700">Error loading applications: ${error.message}</p>
                     </div>
                 `;
-        }
       }
+    }
 
-      async function viewAnalysis(id) {
-        // Navigate to home and show analysis
+    async function viewAnalysis(id) {
+      if (!id) return;
+
+      try {
+        // Navigate to home page but handle visibility manually for results view
         navigateTo("home");
-        // Could load and display the analysis here
-        alert(
-          `Analysis ID: ${id}\n\nFeature: Load and display full analysis details`
-        );
+
+        // Manually switch from hero to workflow since we are showing results
+        document.getElementById("landingHero").classList.add("hidden");
+        document.getElementById("workflowContent").classList.remove("hidden");
+
+        // Show loading overlay in results area
+        const step4 = document.getElementById("step4");
+        step4.classList.remove("hidden");
+        step4.scrollIntoView({ behavior: "smooth" });
+
+        // Reset UI
+        document.getElementById("scoreValue").textContent = "...";
+        document.getElementById("progressText").textContent = "...";
+        document.getElementById("scoreExplanation").innerHTML = "<p>Loading analysis...</p>";
+        document.getElementById("matchingSkills").innerHTML = "<span>Loading...</span>";
+        document.getElementById("missingSkills").innerHTML = "<span>Loading...</span>";
+        document.getElementById("resumeImprovements").innerHTML = "";
+
+        // Fetch analysis details
+        const response = await fetch(`/api/analyses/${id}`, {
+          headers: {
+            Authorization: `Bearer ${idToken}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to load analysis details");
+        }
+
+        const data = await response.json();
+        if (!data.success || !data.analysis) {
+          throw new Error("Invalid analysis data");
+        }
+
+        // Populate UI with fetched data
+        displayAnalysisResults(data.analysis);
+
+        // Update duplicate save button state since it's already saved
+        const saveBtn = document.getElementById("saveBtn");
+        if (saveBtn) {
+          saveBtn.innerHTML = `
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <span>Saved</span>
+            `;
+          saveBtn.classList.remove("bg-green-600", "hover:bg-green-700");
+          saveBtn.classList.add("bg-gray-600", "cursor-not-allowed");
+          saveBtn.disabled = true;
+        }
+
+      } catch (error) {
+        console.error("Error viewing analysis:", error);
+        alert("Failed to load analysis: " + error.message);
+      }
+    }
+
+    // Helper function to render analysis results (extracted from generateResults logic)
+    function displayAnalysisResults(analysis) {
+      analysisData = analysis; // Store globally
+
+      // Hide other steps
+      document.getElementById("step1").classList.add("hidden");
+      document.getElementById("step2").classList.add("hidden");
+      document.getElementById("step3").classList.add("hidden");
+
+      // Show Results
+      const step4 = document.getElementById("step4");
+      step4.classList.remove("hidden");
+
+      // Animate Score
+      const score = analysis.matchScore;
+      const progressBar = document.getElementById("progressBar");
+      const scoreValue = document.getElementById("scoreValue");
+      const progressText = document.getElementById("progressText");
+
+      // Reset animation
+      progressBar.style.width = "0%";
+      scoreValue.textContent = "0";
+      progressText.textContent = "0%";
+
+      setTimeout(() => {
+        progressBar.style.transition = "width 1.5s ease-out";
+        progressBar.style.width = `${score}%`;
+
+        // Color coding
+        if (score >= 80) {
+          progressBar.classList.add("bg-green-500");
+          scoreValue.classList.add("text-green-500");
+        } else if (score >= 60) {
+          progressBar.classList.add("bg-yellow-500");
+          scoreValue.classList.add("text-yellow-500");
+        } else {
+          progressBar.classList.add("bg-red-500");
+          scoreValue.classList.add("text-red-500");
+        }
+
+        // Counter animation
+        let currentScore = 0;
+        const interval = setInterval(() => {
+          if (currentScore >= score) {
+            clearInterval(interval);
+            return;
+          }
+          currentScore++;
+          scoreValue.textContent = currentScore;
+          progressText.textContent = `${currentScore}%`;
+        }, 1500 / score);
+      }, 100);
+
+      // Score Explanation
+      const explanationDiv = document.getElementById("scoreExplanation");
+      if (analysis.scoreExplanation && analysis.scoreExplanation.length > 0) {
+        explanationDiv.innerHTML = analysis.scoreExplanation
+          .map(
+            (exp) =>
+              `<div class="flex items-start"><span class="text-primary mr-2">•</span><span class="text-gray-300">${exp}</span></div>`
+          )
+          .join("");
+      } else {
+        explanationDiv.innerHTML = "<p class='text-gray-400'>No explanation available.</p>";
       }
 
-      // Dashboard Page
-      async function loadDashboard() {
-        if (!currentUser || !idToken) {
-          document.getElementById("dashboardContent").innerHTML = `
+      // Skills
+      const matchingDiv = document.getElementById("matchingSkills");
+      if (analysis.matchingSkills && analysis.matchingSkills.length > 0) {
+        matchingDiv.innerHTML = analysis.matchingSkills
+          .map(
+            (skill) =>
+              `<span class="px-3 py-1 bg-green-900/30 text-green-400 rounded-full text-sm border border-green-800">${skill}</span>`
+          )
+          .join("");
+      } else {
+        matchingDiv.innerHTML = "<span class='text-gray-500'>None found</span>";
+      }
+
+      const missingDiv = document.getElementById("missingSkills");
+      if (analysis.missingSkills && analysis.missingSkills.length > 0) {
+        missingDiv.innerHTML = analysis.missingSkills
+          .map(
+            (skill) =>
+              `<span class="px-3 py-1 bg-red-900/30 text-red-400 rounded-full text-sm border border-red-800">${skill}</span>`
+          )
+          .join("");
+      } else {
+        missingDiv.innerHTML = "<span class='text-gray-500'>None missing! Great job!</span>";
+      }
+
+      // Improvements
+      const improvementsList = document.getElementById("resumeImprovements");
+      if (analysis.resumeImprovements && analysis.resumeImprovements.length > 0) {
+        improvementsList.innerHTML = analysis.resumeImprovements
+          .map(
+            (item) => `
+                        <li class="flex items-start p-3 bg-white/5 rounded-lg border border-white/5">
+                            <svg class="w-5 h-5 text-yellow-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="text-gray-300">${item}</span>
+                        </li>
+                    `
+          )
+          .join("");
+      } else {
+        improvementsList.innerHTML = "<li class='text-gray-500'>No improvements suggested.</li>";
+      }
+
+      // Cover Letter
+      const coverLetterDiv = document.getElementById("coverLetter");
+      if (analysis.coverLetter) {
+        coverLetterDiv.innerHTML = analysis.coverLetter.replace(/\n/g, "<br>");
+      } else {
+        coverLetterDiv.textContent = "No cover letter generated.";
+      }
+
+      // Interview Questions
+      const questionsList = document.getElementById("interviewQuestions");
+      questionsList.innerHTML = "";
+      if (
+        analysis.interviewQuestions &&
+        analysis.interviewQuestions.length > 0
+      ) {
+        analysis.interviewQuestions.forEach((question, index) => {
+          const li = document.createElement("li");
+          li.className =
+            "flex items-start p-4 bg-white/5 border-l-4 border-primary rounded-lg";
+          li.innerHTML = `
+                        <span class="flex-shrink-0 w-8 h-8 bg-primary text-gray-900 rounded-full flex items-center justify-center font-bold mr-4 mt-0.5">${index + 1
+            }</span>
+                        <span class="text-gray-200 leading-relaxed">${question}</span>
+                    `;
+          questionsList.appendChild(li);
+        });
+      }
+    }
+
+    // Dashboard Page
+    async function loadDashboard() {
+      if (!currentUser || !idToken) {
+        document.getElementById("dashboardContent").innerHTML = `
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center col-span-3">
                         <p class="text-gray-500 mb-4">Please sign in to view your dashboard.</p>
                         <button onclick="showLoginModal()" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-secondary">Sign In</button>
                     </div>
                 `;
-          return;
+        return;
+      }
+
+      try {
+        const response = await fetch("/api/analyses", {
+          headers: {
+            Authorization: `Bearer ${idToken}`,
+          },
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            data.message || data.error || "Failed to load dashboard data"
+          );
         }
 
-        try {
-          const response = await fetch("/api/analyses", {
-            headers: {
-              Authorization: `Bearer ${idToken}`,
-            },
-          });
+        if (data.analyses && data.analyses.length > 0) {
+          const total = data.analyses.length;
+          const scores = data.analyses
+            .map((a) => a.matchScore || 0)
+            .filter((s) => s > 0);
+          const average =
+            scores.length > 0
+              ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
+              : 0;
+          const lastDate = data.analyses[0]?.createdAt
+            ? new Date(data.analyses[0].createdAt).toLocaleDateString()
+            : "Never";
 
-          const data = await response.json();
-
-          if (!response.ok) {
-            throw new Error(
-              data.message || data.error || "Failed to load dashboard data"
-            );
-          }
-
-          if (data.analyses && data.analyses.length > 0) {
-            const total = data.analyses.length;
-            const scores = data.analyses
-              .map((a) => a.matchScore || 0)
-              .filter((s) => s > 0);
-            const average =
-              scores.length > 0
-                ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
-                : 0;
-            const lastDate = data.analyses[0]?.createdAt
-              ? new Date(data.analyses[0].createdAt).toLocaleDateString()
-              : "Never";
-
-            document.getElementById("totalAnalyses").textContent = total;
-            document.getElementById("averageScore").textContent = average + "%";
-            document.getElementById("lastAnalysis").textContent = lastDate;
-          } else {
-            document.getElementById("totalAnalyses").textContent = "0";
-            document.getElementById("averageScore").textContent = "-";
-            document.getElementById("lastAnalysis").textContent = "Never";
-          }
-        } catch (error) {
-          console.error("Error loading dashboard:", error);
-          document.getElementById("dashboardContent").innerHTML = `
+          document.getElementById("totalAnalyses").textContent = total;
+          document.getElementById("averageScore").textContent = average + "%";
+          document.getElementById("lastAnalysis").textContent = lastDate;
+        } else {
+          document.getElementById("totalAnalyses").textContent = "0";
+          document.getElementById("averageScore").textContent = "-";
+          document.getElementById("lastAnalysis").textContent = "Never";
+        }
+      } catch (error) {
+        console.error("Error loading dashboard:", error);
+        document.getElementById("dashboardContent").innerHTML = `
                     <div class="bg-red-50 border border-red-200 rounded-lg p-4 col-span-3">
                         <p class="text-red-700">Error loading dashboard: ${error.message}</p>
                         <p class="text-sm text-red-600 mt-2">Please try refreshing the page or contact support if the issue persists.</p>
                     </div>
                 `;
-        }
       }
+    }
 
-      // Protected navigation
-      document
-        .querySelectorAll('[onclick*="applications"], [onclick*="dashboard"]')
-        .forEach((link) => {
-          link.addEventListener("click", function (e) {
-            if (!currentUser) {
-              e.preventDefault();
-              showLoginModal();
-            }
-          });
-        });
-
-      // Initialize
-      updateAuthUI();
-
-      // Close modals on outside click
-      document
-        .getElementById("authModal")
-        .addEventListener("click", function (e) {
-          if (e.target === this) {
-            closeAuthModal();
+    // Protected navigation
+    document
+      .querySelectorAll('[onclick*="applications"], [onclick*="dashboard"]')
+      .forEach((link) => {
+        link.addEventListener("click", function (e) {
+          if (!currentUser) {
+            e.preventDefault();
+            showLoginModal();
           }
         });
+      });
 
-      // Close user menu on outside click
-      document.addEventListener("click", function (e) {
-        const userMenu = document.getElementById("userMenu");
-        const userButton = document.querySelector(
-          '[onclick="toggleUserMenu()"]'
-        );
-        if (!userMenu.contains(e.target) && !userButton.contains(e.target)) {
-          userMenu.classList.add("hidden");
+    // Initialize
+    updateAuthUI();
+
+    // Close modals on outside click
+    document
+      .getElementById("authModal")
+      .addEventListener("click", function (e) {
+        if (e.target === this) {
+          closeAuthModal();
         }
       });
-    </script>
-  </body>
+
+    // Close user menu on outside click
+    document.addEventListener("click", function (e) {
+      const userMenu = document.getElementById("userMenu");
+      const userButton = document.querySelector(
+        '[onclick="toggleUserMenu()"]'
+      );
+      if (!userMenu.contains(e.target) && !userButton.contains(e.target)) {
+        userMenu.classList.add("hidden");
+      }
+    });
+
+    // Save Analysis
+    async function saveAnalysis() {
+      if (!currentUser || !idToken) {
+        showLoginModal();
+        return;
+      }
+
+      if (!analysisData) {
+        alert("No analysis to save!");
+        return;
+      }
+
+      const saveBtn = document.getElementById("saveBtn");
+      const originalContent = saveBtn.innerHTML;
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = `<div class="inline-block animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div><span>Saving...</span>`;
+
+      try {
+        const jobDescription = document.getElementById("jobDescription").value;
+
+        const response = await fetch("/api/save-analysis", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${idToken}`,
+          },
+          body: JSON.stringify({
+            analysis: analysisData,
+            jobDescription: jobDescription
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Failed to save analysis");
+        }
+
+        // Success
+        saveBtn.innerHTML = `
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <span>Saved!</span>
+            `;
+        saveBtn.classList.remove("bg-green-600", "hover:bg-green-700");
+        saveBtn.classList.add("bg-gray-600", "cursor-not-allowed");
+
+      } catch (error) {
+        console.error("Save error:", error);
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = originalContent;
+        alert("Failed to save: " + error.message);
+      }
+    }
+  </script>
+</body>
+
 </html>

@@ -28,7 +28,7 @@ class FirebaseService {
   _initialize() {
     try {
       const serviceAccountPath = path.join(__dirname, '..', 'firebase-service-account.json');
-      
+
       if (!fs.existsSync(serviceAccountPath)) {
         console.warn('⚠️  Firebase service account file not found. Results will not be saved to database.');
         console.warn('   To enable Firebase: Download service account JSON from Firebase Console');
@@ -37,7 +37,7 @@ class FirebaseService {
       }
 
       const serviceAccount = require(serviceAccountPath);
-      
+
       // Check if Firebase is already initialized
       if (admin.apps.length === 0) {
         admin.initializeApp({
@@ -85,28 +85,36 @@ class FirebaseService {
    */
   async saveAnalysis(analysis, userId = null) {
     if (!this.initialized || !this.db) {
-      return null;
+      return { success: false, error: 'Firebase not initialized' };
+    }
+
+    // MANDATORY: User ID required for saving
+    if (!userId) {
+      console.warn('⚠️  Analysis not saved: User not logged in (anonymous generation)');
+      return { success: false, error: 'User not logged in' };
     }
 
     try {
       const analysisData = {
         ...analysis,
         timestamp: admin.firestore.FieldValue.serverTimestamp(),
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        userId: userId // Keep userId in doc for reference/indexes
       };
 
-      // Add userId if provided
-      if (userId) {
-        analysisData.userId = userId;
-      }
-
+      // Save to root collection 'analyses' with userId field
+      // This avoids potential issues with subcollection path creation in some environments
       const docRef = await this.db.collection('analyses').add(analysisData);
-      console.log(`💾 Analysis saved to Firestore: ${docRef.id}${userId ? ` (User: ${userId})` : ''}`);
-      return docRef.id;
+      console.log(`💾 Analysis saved to Firestore: ${docRef.id} (User: ${userId})`);
+      return { success: true, id: docRef.id };
     } catch (error) {
-      console.error('❌ Error saving to Firestore:', error.message);
-      // Don't throw - allow app to continue even if save fails
-      return null;
+      console.error('❌ Error saving to Firestore:', error);
+      console.error('   Error Code:', error.code);
+      console.error('   Error Message:', error.message);
+      if (error.details) console.error('   Details:', error.details);
+
+      // Return the specific error for debugging
+      return { success: false, error: error.message || 'Unknown Firestore Error' };
     }
   }
 
@@ -153,7 +161,7 @@ class FirebaseService {
 
     try {
       const doc = await this.db.collection('analyses').doc(docId).get();
-      
+
       if (!doc.exists) {
         return null;
       }
@@ -180,95 +188,53 @@ class FirebaseService {
     }
 
     try {
+      console.log(`🔍 Fetching analyses for User: ${userId}`);
       // Defensive guard: treat missing/invalid userId as empty results
       if (!userId || typeof userId !== 'string' || userId.trim() === '') {
+        console.warn('⚠️  Invalid userId provided to getAnalysesByUserId');
         return [];
       }
-      // Try querying with orderBy first (requires composite index)
-      // If that fails, fall back to querying without orderBy and sorting in memory
+
       let snapshot;
-      let usedOrderBy = true;
-      
       try {
+        console.log('   Attempting query: collection("analyses").where("userId", "==", userId).orderBy("timestamp", "desc")');
         snapshot = await this.db.collection('analyses')
           .where('userId', '==', userId)
           .orderBy('timestamp', 'desc')
           .limit(limit)
           .get();
       } catch (orderByError) {
-        // If orderBy fails (missing index), try without orderBy and sort in memory
-        const errorMsg = orderByError.message || '';
-        const errorCode = orderByError.code;
-        
-        if (errorCode === 9 || errorMsg.includes('index') || errorMsg.includes('requires an index') || errorMsg.includes('The query requires an index')) {
-          console.warn('⚠️  Firestore composite index missing for userId+timestamp. Fetching without orderBy and sorting in memory.');
-          usedOrderBy = false;
-          snapshot = await this.db.collection('analyses')
-            .where('userId', '==', userId)
-            .limit(limit * 3) // Get more to account for sorting
-            .get();
-        } else {
-          // For other errors, still try the fallback
-          console.warn('⚠️  Query with orderBy failed, trying without orderBy:', orderByError.message);
-          usedOrderBy = false;
-          snapshot = await this.db.collection('analyses')
-            .where('userId', '==', userId)
-            .limit(limit * 3)
-            .get();
-        }
+        console.warn(`⚠️  Primary Query Failed: ${orderByError.code} - ${orderByError.message}`);
+
+        console.log('   Attempting fallback query: collection("analyses").where("userId", "==", userId) (Unordered)');
+        snapshot = await this.db.collection('analyses')
+          .where('userId', '==', userId)
+          .limit(limit * 3)
+          .get();
       }
+
+      console.log(`✅ Query successful. Documents found: ${snapshot.size}`);
 
       const analyses = [];
       snapshot.forEach(doc => {
-        const data = doc.data();
         analyses.push({
           id: doc.id,
-          ...data
+          ...doc.data()
         });
       });
 
-      // Sort by timestamp if we didn't use orderBy
-      if (!usedOrderBy && analyses.length > 0) {
-        analyses.sort((a, b) => {
-          // Handle Firestore Timestamp objects
-          let aTime = 0;
-          let bTime = 0;
-          
-          if (a.timestamp && a.timestamp.toMillis) {
-            aTime = a.timestamp.toMillis();
-          } else if (a.timestamp && a.timestamp.seconds) {
-            aTime = a.timestamp.seconds * 1000;
-          } else if (a.createdAt) {
-            aTime = new Date(a.createdAt).getTime();
-          }
-          
-          if (b.timestamp && b.timestamp.toMillis) {
-            bTime = b.timestamp.toMillis();
-          } else if (b.timestamp && b.timestamp.seconds) {
-            bTime = b.timestamp.seconds * 1000;
-          } else if (b.createdAt) {
-            bTime = new Date(b.createdAt).getTime();
-          }
-          
-          return bTime - aTime; // Descending order (newest first)
-        });
-        
-        // Limit after sorting
-        return analyses.slice(0, limit);
-      }
+      // Ensure sorted desc
+      analyses.sort((a, b) => {
+        const timeA = a.timestamp?.toMillis ? a.timestamp.toMillis() : new Date(a.createdAt).getTime();
+        const timeB = b.timestamp?.toMillis ? b.timestamp.toMillis() : new Date(b.createdAt).getTime();
+        return timeB - timeA;
+      });
 
-      return analyses;
+      return analyses.slice(0, limit);
     } catch (error) {
-      console.error('❌ Error fetching user analyses:', error.message);
-      console.error('Error code:', error.code);
-      console.error('Error stack:', error.stack);
-      // Treat NOT_FOUND (code 5) and similar "not found" cases as empty results to avoid user-facing errors
-      const codeStr = String(error && error.code !== undefined ? error.code : '');
-      const msgUpper = (error && error.message ? error.message : '').toUpperCase();
-      if (codeStr === '5' || msgUpper.includes('NOT_FOUND')) {
-        return [];
-      }
-      throw new Error(`Failed to fetch analyses: ${error.message}`);
+      console.error('❌ Error fetching user analyses:', error);
+      console.error(`   Code: ${error.code}, Message: ${error.message}`);
+      return [];
     }
   }
 

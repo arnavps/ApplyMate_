@@ -68,9 +68,9 @@ const errorHandler = (err, req, res, next) => {
   // Multer errors
   if (err instanceof multer.MulterError) {
     if (err.code === 'LIMIT_FILE_SIZE') {
-      return res.status(400).json({ 
-        error: 'File too large', 
-        message: `Maximum file size is ${process.env.MAX_FILE_SIZE || 5}MB` 
+      return res.status(400).json({
+        error: 'File too large',
+        message: `Maximum file size is ${process.env.MAX_FILE_SIZE || 5}MB`
       });
     }
     return res.status(400).json({ error: 'File upload error', message: err.message });
@@ -83,32 +83,32 @@ const errorHandler = (err, req, res, next) => {
 
   // AI service errors
   if (err.message.includes('AI analysis') || err.message.includes('Gemini')) {
-    return res.status(500).json({ 
-      error: 'AI analysis failed', 
-      message: err.message 
+    return res.status(500).json({
+      error: 'AI analysis failed',
+      message: err.message
     });
   }
 
   // PDF extraction errors
   if (err.message.includes('PDF') || err.message.includes('extract')) {
-    return res.status(400).json({ 
-      error: 'PDF processing error', 
-      message: err.message 
+    return res.status(400).json({
+      error: 'PDF processing error',
+      message: err.message
     });
   }
 
   // Firebase/Firestore errors
   if (err.message.includes('Firebase') || err.message.includes('Firestore') || err.message.includes('index')) {
-    return res.status(500).json({ 
-      error: 'Database error', 
+    return res.status(500).json({
+      error: 'Database error',
       message: err.message,
       details: process.env.NODE_ENV === 'development' ? err.stack : undefined
     });
   }
 
   // Default error
-  res.status(500).json({ 
-    error: 'Internal server error', 
+  res.status(500).json({
+    error: 'Internal server error',
     message: process.env.NODE_ENV === 'development' ? err.message : 'An unexpected error occurred',
     details: process.env.NODE_ENV === 'development' ? err.stack : undefined
   });
@@ -141,9 +141,9 @@ app.post('/api/analyze', upload.single('resume'), async (req, res, next) => {
   try {
     // Validate file upload
     if (!req.file) {
-      return res.status(400).json({ 
-        error: 'No resume file uploaded', 
-        message: 'Please upload a PDF resume file' 
+      return res.status(400).json({
+        error: 'No resume file uploaded',
+        message: 'Please upload a PDF resume file'
       });
     }
 
@@ -152,47 +152,30 @@ app.post('/api/analyze', upload.single('resume'), async (req, res, next) => {
     // Validate job description
     if (!req.body.jobDescription || req.body.jobDescription.trim() === '') {
       pdfExtractor.cleanup(uploadedFilePath);
-      return res.status(400).json({ 
-        error: 'Job description required', 
-        message: 'Please provide a job description' 
+      return res.status(400).json({
+        error: 'Job description required',
+        message: 'Please provide a job description'
       });
     }
 
     // Extract text from PDF
     const resumeText = await pdfExtractor.extractText(uploadedFilePath);
-    
+
     // Analyze with AI service
     const analysis = await aiService.analyzeResume(
-      resumeText, 
+      resumeText,
       req.body.jobDescription.trim()
     );
-
-    // Get userId from auth token if provided
-    let userId = null;
-    if (req.headers.authorization) {
-      const token = req.headers.authorization.replace('Bearer ', '');
-      const userInfo = await firebaseService.verifyAuthToken(token);
-      if (userInfo) {
-        userId = userInfo.uid;
-      }
-    }
-
-    // Save to Firebase (non-blocking)
-    const firestoreId = await firebaseService.saveAnalysis({
-      resumeText: resumeText.substring(0, 500), // Store snippet for reference
-      jobDescription: req.body.jobDescription.substring(0, 500),
-      ...analysis
-    }, userId);
 
     // Clean up uploaded file
     pdfExtractor.cleanup(uploadedFilePath);
 
-    // Return success response
+    // Return success response with saved: false (manual save required)
     res.json({
       success: true,
       analysis: analysis,
-      firestoreId: firestoreId,
-      saved: firestoreId !== null
+      firestoreId: null,
+      saved: false
     });
 
   } catch (error) {
@@ -200,8 +183,57 @@ app.post('/api/analyze', upload.single('resume'), async (req, res, next) => {
     if (uploadedFilePath) {
       pdfExtractor.cleanup(uploadedFilePath);
     }
-    
+
     // Pass to error handler
+    next(error);
+  }
+});
+
+/**
+ * POST /api/save-analysis
+ * Save an existing analysis to the user's dashboard
+ * 
+ * Flow:
+ * 1. Verify Auth Token (Required)
+ * 2. Validate Input
+ * 3. Save to Firebase
+ */
+app.post('/api/save-analysis', async (req, res, next) => {
+  try {
+    const { analysis, jobDescription } = req.body;
+
+    // 1. Verify Auth
+    if (!req.headers.authorization) {
+      return res.status(401).json({ error: 'Authentication required to save results' });
+    }
+
+    const token = req.headers.authorization.replace('Bearer ', '');
+    const userInfo = await firebaseService.verifyAuthToken(token);
+
+    if (!userInfo) {
+      return res.status(401).json({ error: 'Invalid or expired session. Please log in again.' });
+    }
+
+    // 2. Validate Input
+    if (!analysis || !jobDescription) {
+      return res.status(400).json({ error: 'Missing analysis data or job description' });
+    }
+
+    // 3. Save to Firebase
+    // Reconstruct the full object expected by saveAnalysis
+    const result = await firebaseService.saveAnalysis({
+      ...analysis,
+      jobDescription: jobDescription.substring(0, 500)
+    }, userInfo.uid);
+
+    if (result.success) {
+      res.json({ success: true, firestoreId: result.id, saved: true });
+    } else {
+      // Pass the specific database error to the client
+      throw new Error(`Database save failed: ${result.error}`);
+    }
+
+  } catch (error) {
     next(error);
   }
 });
@@ -213,9 +245,9 @@ app.post('/api/analyze', upload.single('resume'), async (req, res, next) => {
 app.get('/api/analyses', async (req, res, next) => {
   try {
     if (!firebaseService.isAvailable()) {
-      return res.status(503).json({ 
-        error: 'Firebase not available', 
-        message: 'Database is not configured. Results are not being saved.' 
+      return res.status(503).json({
+        error: 'Firebase not available',
+        message: 'Database is not configured. Results are not being saved.'
       });
     }
 
@@ -225,7 +257,7 @@ app.get('/api/analyses', async (req, res, next) => {
     // Check if user is authenticated
     if (req.headers.authorization) {
       const token = req.headers.authorization.replace('Bearer ', '');
-      
+
       if (!token || token === 'Bearer') {
         return res.status(401).json({ error: 'Invalid authentication token format' });
       }
@@ -255,7 +287,7 @@ app.get('/api/analyses', async (req, res, next) => {
       analyses = await firebaseService.getAllAnalyses(limit);
     }
 
-    res.json({ 
+    res.json({
       success: true,
       count: analyses.length,
       analyses: analyses || []
@@ -273,21 +305,21 @@ app.get('/api/analyses', async (req, res, next) => {
 app.post('/api/verify-auth', async (req, res, next) => {
   try {
     const { idToken } = req.body;
-    
+
     if (!idToken) {
       return res.status(400).json({ error: 'ID token required' });
     }
 
     const userInfo = await firebaseService.verifyAuthToken(idToken);
-    
+
     if (userInfo) {
-      res.json({ 
+      res.json({
         success: true,
-        user: userInfo 
+        user: userInfo
       });
     } else {
-      res.status(401).json({ 
-        error: 'Invalid token' 
+      res.status(401).json({
+        error: 'Invalid token'
       });
     }
   } catch (error) {
@@ -302,22 +334,22 @@ app.post('/api/verify-auth', async (req, res, next) => {
 app.get('/api/analyses/:id', async (req, res, next) => {
   try {
     if (!firebaseService.isAvailable()) {
-      return res.status(503).json({ 
-        error: 'Firebase not available' 
+      return res.status(503).json({
+        error: 'Firebase not available'
       });
     }
 
     const analysis = await firebaseService.getAnalysisById(req.params.id);
 
     if (!analysis) {
-      return res.status(404).json({ 
-        error: 'Analysis not found' 
+      return res.status(404).json({
+        error: 'Analysis not found'
       });
     }
 
-    res.json({ 
+    res.json({
       success: true,
-      analysis 
+      analysis
     });
   } catch (error) {
     next(error);
