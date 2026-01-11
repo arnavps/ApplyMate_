@@ -39,16 +39,28 @@ class FirebaseService {
       } else if (process.env.FIREBASE_SERVICE_ACCOUNT) {
         // Fallback: Read from Environment Variable (for deployment)
         try {
-          let serviceAccountStr = process.env.FIREBASE_SERVICE_ACCOUNT;
+          const serviceAccountStr = process.env.FIREBASE_SERVICE_ACCOUNT.trim();
+          let serviceAccount;
 
-          // Common Fix: Remove wrapping quotes if they exist (sometimes added by hosting providers)
-          if (serviceAccountStr.startsWith('"') && serviceAccountStr.endsWith('"')) {
-            serviceAccountStr = serviceAccountStr.slice(1, -1);
+          // Strategy 1: Try parsing exact content first
+          try {
+            serviceAccount = JSON.parse(serviceAccountStr);
+          } catch (e1) {
+            // Strategy 2: If failure, check for and remove wrapping quotes (common hosting issue)
+            // Only try this if it actually starts/ends with quotes
+            if ((serviceAccountStr.startsWith('"') && serviceAccountStr.endsWith('"')) ||
+              (serviceAccountStr.startsWith("'") && serviceAccountStr.endsWith("'"))) {
+              const stripped = serviceAccountStr.slice(1, -1);
+              try {
+                serviceAccount = JSON.parse(stripped);
+              } catch (e2) {
+                throw new Error(`Parse failed raw and stripped: ${e1.message} | ${e2.message}`);
+              }
+            } else {
+              throw e1; // Rethrow original if no quotes to strip
+            }
           }
-          // Common Fix: Handle escaped newlines properly
-          serviceAccountStr = serviceAccountStr.replace(/\\n/g, '\n');
 
-          const serviceAccount = JSON.parse(serviceAccountStr);
           if (admin.apps.length === 0) {
             admin.initializeApp({
               credential: admin.credential.cert(serviceAccount)
