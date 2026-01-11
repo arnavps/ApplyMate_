@@ -15,10 +15,6 @@ uploads/
 npm-debug.log*
 
 # OS files
-.DS_Store
-Thumbs.db
-
-
-public/firebase-config.js
+# public/firebase-config.js (Required for deployment)
 
 # Note: package-lock.json and README.md should be committed
