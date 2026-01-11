@@ -7,14 +7,9 @@ node_modules/
 # Firebase service account key
 firebase-service-account.json
 
-# Uploaded files
-uploads/
+# Uploaded fil
+# public/firebase-config.js (Handling via env vars now)
 
-# Logs
-*.log
-npm-debug.log*
 
-# OS files
-# public/firebase-config.js (Required for deployment)
 
 # Note: package-lock.json and README.md should be committed
