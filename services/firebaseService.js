@@ -39,7 +39,16 @@ class FirebaseService {
       } else if (process.env.FIREBASE_SERVICE_ACCOUNT) {
         // Fallback: Read from Environment Variable (for deployment)
         try {
-          const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+          let serviceAccountStr = process.env.FIREBASE_SERVICE_ACCOUNT;
+
+          // Common Fix: Remove wrapping quotes if they exist (sometimes added by hosting providers)
+          if (serviceAccountStr.startsWith('"') && serviceAccountStr.endsWith('"')) {
+            serviceAccountStr = serviceAccountStr.slice(1, -1);
+          }
+          // Common Fix: Handle escaped newlines properly
+          serviceAccountStr = serviceAccountStr.replace(/\\n/g, '\n');
+
+          const serviceAccount = JSON.parse(serviceAccountStr);
           if (admin.apps.length === 0) {
             admin.initializeApp({
               credential: admin.credential.cert(serviceAccount)
@@ -47,8 +56,11 @@ class FirebaseService {
           }
           console.log('✅ Firebase initialized from Environment Variable');
         } catch (parseError) {
-          console.error('❌ Failed to parse FIREBASE_SERVICE_ACCOUNT environment variable');
-          throw parseError;
+          console.error('❌ Failed to parse FIREBASE_SERVICE_ACCOUNT environment variable.');
+          console.error('   ErrorDetails:', parseError.message);
+          // Log first few chars to help identify if it's not JSON (without leaking secrets)
+          console.error('   First 20 chars:', process.env.FIREBASE_SERVICE_ACCOUNT ? process.env.FIREBASE_SERVICE_ACCOUNT.substring(0, 20) : 'undefined');
+          // Do not throw here, let it fail gracefully so server stays up but firebase is unavailable
         }
       } else {
         console.warn('⚠️  Firebase service account file not found via path or env var.');
