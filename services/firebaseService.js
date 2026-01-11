@@ -57,10 +57,15 @@ class FirebaseService {
           console.log('✅ Firebase initialized from Environment Variable');
         } catch (parseError) {
           console.error('❌ Failed to parse FIREBASE_SERVICE_ACCOUNT environment variable.');
-          console.error('   ErrorDetails:', parseError.message);
-          // Log first few chars to help identify if it's not JSON (without leaking secrets)
-          console.error('   First 20 chars:', process.env.FIREBASE_SERVICE_ACCOUNT ? process.env.FIREBASE_SERVICE_ACCOUNT.substring(0, 20) : 'undefined');
-          // Do not throw here, let it fail gracefully so server stays up but firebase is unavailable
+
+          this.initialized = false;
+          this.initError = `Env Var Parse Error: ${parseError.message}`;
+
+          if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+            const preview = process.env.FIREBASE_SERVICE_ACCOUNT.substring(0, 10);
+            this.initError += ` (Start: '${preview}...')`;
+          }
+          return;
         }
       } else {
         console.warn('⚠️  Firebase service account file not found via path or env var.');
